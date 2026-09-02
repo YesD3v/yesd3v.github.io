@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>YESHUB</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --discord: #5865F2;
+            --bg: #000;
+            --panel: #080808;
+            --border: rgba(255, 255, 255, 0.09);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #000;
+            color: #fff;
+            font-family: Arial, Helvetica, sans-serif;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -3;
+            background:
+                radial-gradient(
+                    circle at 50% -10%,
+                    rgba(255, 255, 255, 0.055),
+                    transparent 38%
+                ),
+                #000;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            pointer-events: none;
+            opacity: 0.27;
+            background:
+                linear-gradient(
+                    135deg,
+                    transparent 47%,
+                    rgba(255,255,255,.025) 49%,
+                    transparent 51%
+                ),
+                linear-gradient(
+                    45deg,
+                    transparent 47%,
+                    rgba(255,255,255,.018) 49%,
+                    transparent 51%
+                );
+            background-size: 130px 130px;
+            transform: perspective(800px) rotateX(55deg) scale(1.7);
+            transform-origin: center bottom;
+        }
+
+        .floor {
+            position: fixed;
+            left: -10%;
+            right: -10%;
+            bottom: -35%;
+            height: 75%;
+            z-index: -1;
+            opacity: 0.16;
+            transform: perspective(500px) rotateX(62deg);
+
+            background:
+                linear-gradient(
+                    rgba(255,255,255,.04) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    90deg,
+                    rgba(255,255,255,.04) 1px,
+                    transparent 1px
+                );
+
+            background-size: 80px 80px;
+
+            mask-image: linear-gradient(
+                to top,
+                #000,
+                transparent
+            );
+
+            -webkit-mask-image: linear-gradient(
+                to top,
+                #000,
+                transparent
+            );
+        }
+
+        /* Discord */
+
+        .discord {
+            position: fixed;
+            top: 28px;
+            right: 30px;
+
+            width: 48px;
+            height: 48px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: var(--discord);
+            text-decoration: none;
+
+            background: rgba(8, 8, 8, 0.82);
+            border: 1px solid rgba(88, 101, 242, 0.25);
+            border-radius: 13px;
+
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+
+            box-shadow:
+                0 8px 30px rgba(0,0,0,.5);
+
+            transition:
+                color .2s ease,
+                border-color .2s ease,
+                box-shadow .2s ease,
+                background .2s ease;
+        }
+
+        .discord svg {
+            width: 26px;
+            height: 26px;
+            fill: currentColor;
+        }
+
+        .discord:hover {
+            color: #7289DA;
+            background: rgba(88, 101, 242, 0.08);
+            border-color: rgba(88, 101, 242, 0.55);
+
+            box-shadow:
+                0 0 8px rgba(88, 101, 242, 0.25),
+                0 0 24px rgba(88, 101, 242, 0.18),
+                0 12px 35px rgba(0,0,0,.65);
+        }
+
+        .discord:active {
+            opacity: 0.8;
+        }
+
+        /* Main */
+
+        .container {
+            width: min(1200px, calc(100% - 48px));
+            margin: auto;
+            padding: 55px 0 100px;
+        }
+
+        .brand {
+            text-align: center;
+            user-select: none;
+        }
+
+        .brand h1 {
+            display: inline-block;
+
+            font-size: clamp(3.5rem, 10vw, 8rem);
+            line-height: 1;
+            font-weight: 900;
+            letter-spacing: .18em;
+
+            transform: scaleX(1.12);
+            transform-origin: center;
+
+            color: #fff;
+
+            text-shadow:
+                0 0 5px rgba(255,255,255,.95),
+                0 0 14px rgba(255,255,255,.55),
+                0 0 30px rgba(255,255,255,.28),
+                0 0 60px rgba(255,255,255,.12);
+        }
+
+        .divider {
+            width: 100%;
+            height: 1px;
+            margin-top: 38px;
+
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,255,255,.20) 15%,
+                rgba(255,255,255,.45) 50%,
+                rgba(255,255,255,.20) 85%,
+                transparent
+            );
+
+            box-shadow:
+                0 0 15px rgba(255,255,255,.07);
+        }
+
+        /* Yex Executor Download */
+
+        .download-box {
+            margin-top: 35px;
+            padding: 24px 26px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,.045),
+                    rgba(255,255,255,.012) 50%,
+                    rgba(0,0,0,.35)
+                ),
+                #070707;
+
+            border: 1px solid rgba(255,255,255,.10);
+            border-radius: 16px;
+
+            box-shadow:
+                inset 0 1px rgba(255,255,255,.025),
+                0 20px 60px rgba(0,0,0,.4);
+
+            transition:
+                border-color .25s ease,
+                box-shadow .25s ease;
+        }
+
+        .download-box:hover {
+            border-color: rgba(255,255,255,.17);
+
+            box-shadow:
+                inset 0 1px rgba(255,255,255,.04),
+                0 25px 70px rgba(0,0,0,.5);
+        }
+
+        .download-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .download-title {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: .01em;
+        }
+
+        .download-subtitle {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .download-button {
+            flex-shrink: 0;
+
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+
+            padding: 11px 16px;
+
+            color: #fff;
+            text-decoration: none;
+
+            background: #101010;
+            border: 1px solid rgba(255,255,255,.11);
+            border-radius: 9px;
+
+            font-size: 12px;
+            font-weight: 700;
+
+            transition:
+                background .2s ease,
+                border-color .2s ease,
+                box-shadow .2s ease;
+        }
+
+        .download-button svg {
+            width: 15px;
+            height: 15px;
+            fill: currentColor;
+        }
+
+        .download-button:hover {
+            background: #181818;
+            border-color: rgba(255,255,255,.24);
+
+            box-shadow:
+                0 0 18px rgba(255,255,255,.07);
+        }
+
+        /* Repositories */
+
+        .repositories {
+            margin-top: 28px;
+
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 24px;
+        }
+
+        .repo {
+            position: relative;
+            overflow: hidden;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,.035),
+                    rgba(255,255,255,.008) 45%,
+                    rgba(0,0,0,.4)
+                ),
+                #070707;
+
+            border: 1px solid var(--border);
+            border-radius: 16px;
+
+            box-shadow:
+                inset 0 1px rgba(255,255,255,.025),
+                0 20px 60px rgba(0,0,0,.35);
+
+            transition:
+                border-color .25s ease,
+                transform .25s ease,
+                box-shadow .25s ease;
+        }
+
+        .repo:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255,255,255,.16);
+
+            box-shadow:
+                inset 0 1px rgba(255,255,255,.04),
+                0 25px 70px rgba(0,0,0,.5);
+        }
+
+        .repo::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 8%;
+            right: 8%;
+            height: 1px;
+
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,255,255,.16),
+                transparent
+            );
+        }
+
+        .repo-header {
+            height: 64px;
+            padding: 0 18px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            border-bottom: 1px solid rgba(255,255,255,.07);
+        }
+
+        .repo-name {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: .02em;
+        }
+
+        .github-icon {
+            width: 18px;
+            height: 18px;
+            fill: #fff;
+            opacity: .9;
+        }
+
+        .repo-link {
+            color: #888;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+
+            padding: 7px 10px;
+            border-radius: 7px;
+
+            transition:
+                color .2s ease,
+                background .2s ease;
+        }
+
+        .repo-link:hover {
+            color: #fff;
+            background: rgba(255,255,255,.07);
+        }
+
+        /* Code */
+
+        .code-wrapper {
+            position: relative;
+            padding: 18px;
+        }
+
+        .code {
+            position: relative;
+            height: 280px;
+            overflow: auto;
+
+            padding: 18px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #030303,
+                    #090909
+                );
+
+            border: 1px solid rgba(255,255,255,.06);
+            border-radius: 10px;
+
+            color: #bcbcbc;
+
+            font-family:
+                "SFMono-Regular",
+                Consolas,
+                "Liberation Mono",
+                monospace;
+
+            font-size: 12px;
+            line-height: 1.75;
+
+            white-space: pre;
+            tab-size: 4;
+
+            box-shadow:
+                inset 0 0 35px rgba(0,0,0,.6);
+        }
+
+        .code::-webkit-scrollbar {
+            width: 7px;
+            height: 7px;
+        }
+
+        .code::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .code::-webkit-scrollbar-thumb {
+            background: #222;
+            border-radius: 10px;
+        }
+
+        .code::-webkit-scrollbar-thumb:hover {
+            background: #333;
+        }
+
+        /* Copy */
+
+        .copy {
+            position: absolute;
+            top: 28px;
+            right: 28px;
+
+            display: flex;
+            align-items: center;
+            gap: 7px;
+
+            padding: 8px 11px;
+
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 7px;
+
+            background: rgba(12,12,12,.88);
+            color: #888;
+
+            font-size: 11px;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+
+            transition:
+                color .2s ease,
+                border-color .2s ease,
+                background .2s ease;
+        }
+
+        .copy svg {
+            width: 13px;
+            height: 13px;
+            fill: currentColor;
+        }
+
+        .copy:hover {
+            color: #fff;
+            border-color: rgba(255,255,255,.2);
+            background: rgba(25,25,25,.95);
+        }
+
+        .copy.copied {
+            color: #fff;
+            border-color: rgba(255,255,255,.3);
+        }
+
+        /* Mobile */
+
+        @media (max-width: 800px) {
+            .repositories {
+                grid-template-columns: 1fr;
+            }
+
+            .download-box {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .download-button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: calc(100% - 28px);
+                padding-top: 35px;
+            }
+
+            .discord {
+                top: 18px;
+                right: 18px;
+                width: 43px;
+                height: 43px;
+            }
+
+            .brand h1 {
+                letter-spacing: .1em;
+                transform: scaleX(1.05);
+            }
+
+            .divider {
+                margin-top: 25px;
+            }
+
+            .download-box {
+                margin-top: 28px;
+                padding: 20px;
+            }
+
+            .repositories {
+                margin-top: 22px;
+            }
+
+            .code {
+                height: 250px;
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="floor"></div>
+
+    <!-- Discord -->
+    <a
+        class="discord"
+        href="https://discord.gg/P2DFbPX3Qh"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Join the YESHUB Discord"
+    >
+        <svg viewBox="0 0 24 24">
+            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.211.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.95 19.95 0 0 0 5.993 3.03.078.078 0 0 0 .084-.027c.461-.63.873-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.17 13.17 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .077-.01c3.928 1.794 8.18 1.794 12.061 0a.074.074 0 0 1 .078.009c.12.099.246.198.373.292a.077.077 0 0 1-.006.127c-.598.345-1.22.64-1.873.893a.077.077 0 0 0-.04.107c.36.698.771 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.91 19.91 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.032-.029ZM8.02 15.33c-1.183 0-2.157-1.086-2.157-2.419 0-1.333.956-2.42 2.157-2.42 1.21 0 2.166 1.097 2.157 2.42 0 1.333-.956 2.419-2.157 2.419Zm7.974 0c-1.183 0-2.157-1.086-2.157-2.419 0-1.333.956-2.42 2.157-2.42 1.21 0 2.166 1.097 2.157 2.42 0 1.333-.956 2.419-2.157 2.419Z"/>
+        </svg>
+    </a>
+
+    <main class="container">
+
+        <header class="brand">
+            <h1>YESHUB</h1>
+        </header>
+
+        <div class="divider"></div>
+
+        <!-- Yex Executor -->
+        <section class="download-box">
+
+            <div class="download-info">
+                <div class="download-title">Yex Executor</div>
+                <div class="download-subtitle">
+                    Download the latest version of Yex Executor
+                </div>
+            </div>
+
+            <a
+                class="download-button"
+                href="https://gofile.io/d/UFWYg3Sn"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                <svg viewBox="0 0 24 24">
+                    <path d="M19 9h-4V3H9v6H5l7 7 7-7zm-14 9v2h14v-2H5z"/>
+                </svg>
+                Download
+            </a>
+
+        </section>
+
+        <section class="repositories">
+
+            <!-- Super Ring -->
+
+            <article class="repo">
+
+                <div class="repo-header">
+
+                    <div class="repo-name">
+                        <svg class="github-icon" viewBox="0 0 24 24">
+                            <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55v-2.16c-3.2.7-3.87-1.54-3.87-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.25 3.34.95.1-.74.4-1.25.73-1.54-2.55-.29-5.23-1.28-5.23-5.69 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.47.11-3.06 0 0 .96-.31 3.15 1.18a10.9 10.9 0 0 1 5.74 0c2.19-1.49 3.15-1.18 3.15-1.18.62 1.59.23 2.77.11 3.06.73.81 1.18 1.84 1.18 3.1 0 4.42-2.69 5.39-5.25 5.68.41.35.78 1.04.78 2.1v3.11c0 .3.21.66.79.55A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/>
+                        </svg>
+
+                        Super Ring
+                    </div>
+
+                    <a
+                        class="repo-link"
+                        href="https://github.com/yes-d3v-scripts/super-ring"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        View Repo ↗
+                    </a>
+
+                </div>
+
+                <div class="code-wrapper">
+
+                    <button class="copy" onclick="copyCode(this, 'code1')">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                        </svg>
+                        Copy
+                    </button>
+
+                    <pre class="code" id="code1">local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local LocalPlayer = Players.LocalPlayer
+local Workspace = game:GetService("Workspace")
+
+local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+local Folder = Instance.new("Folder", Workspace)
+local Part = Instance.new("Part", Folder)
+local Attachment1 = Instance.new("Attachment", Part)
+Part.Anchored = true
+Part.CanCollide = false
+Part.Transparency = 1
+
+if not getgenv().Network then
+    getgenv().Network = {
+        BaseParts = {},
+... </pre>
+
+                </div>
+
+            </article>
+
+            <!-- Drop Kick Fling -->
+
+            <article class="repo">
+
+                <div class="repo-header">
+
+                    <div class="repo-name">
+                        <svg class="github-icon" viewBox="0 0 24 24">
+                            <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55v-2.16c-3.2.7-3.87-1.54-3.87-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.25 3.34.95.1-.74.4-1.25.73-1.54-2.55-.29-5.23-1.28-5.23-5.69 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.47.11-3.06 0 0 .96-.31 3.15 1.18a10.9 10.9 0 0 1 5.74 0c2.19-1.49 3.15-1.18 3.15-1.18.62 1.59.23 2.77.11 3.06.73.81 1.18 1.84 1.18 3.1 0 4.42-2.69 5.39-5.25 5.68.41.35.78 1.04.78 2.1v3.11c0 .3.21.66.79.55A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/>
+                        </svg>
+
+                        Drop Kick Fling
+                    </div>
+
+                    <a
+                        class="repo-link"
+                        href="https://github.com/yes-d3v-scripts/drop-kick-fling"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        View Repo ↗
+                    </a>
+
+                </div>
+
+                <div class="code-wrapper">
+
+                    <button class="copy" onclick="copyCode(this, 'code2')">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                        </svg>
+                        Copy
+                    </button>
+
+                    <pre class="code" id="code2">local utility = {
+    dropkick = Instance.new("Animation"),
+    Players = game:GetService("Players"),
+    RunService = game:GetService("RunService"),
+    UserInputService = game:GetService("UserInputService"),
+    TweenService = game:GetService("TweenService"),
+    Debris = game:GetService("Debris"),
+    HttpService = game:GetService("HttpService"),
+    StarterGui = game:GetService("StarterGui"),
+    conns = {}
+}
+
+utility.dropkick.AnimationId = "rbxassetid://133566007754001"
+
+task.spawn(function()
+    local instancesToLoad = {}
+    table.insert(instancesToLoad, utility.dropkick)
+    
+    local gearPreload = Instance.new("ImageLabel")
+...
+</pre>
+
+                </div>
+
+            </article>
+
+        </section>
+
+    </main>
+
+    <script>
+        function copyCode(button, id) {
+            const code = document.getElementById(id).innerText;
+
+            navigator.clipboard.writeText(code).then(() => {
+                const original = button.innerHTML;
+
+                button.classList.add("copied");
+
+                button.innerHTML = `
+                    <svg viewBox="0 0 24 24">
+                        <path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                    </svg>
+                    Copied
+                `;
+
+                setTimeout(() => {
+                    button.classList.remove("copied");
+                    button.innerHTML = original;
+                }, 1400);
+            });
+        }
+    </script>
+
+</body>
+</html>
