@@ -1011,24 +1011,44 @@ task.spawn(function()
             });
         }
 
-        // Visitor counter - counts (roughly) unique visitors rather than raw
-        // page loads. Uses countapi.mileshilliard.com, a free, key-less
-        // counting API (https://countapi.mileshilliard.com/) - no API key
-        // involved, so there's nothing here that could leak.
+        // Visitor counter - counts (roughly) unique visitors per day rather
+        // than raw page loads. Uses countapi.mileshilliard.com, a free,
+        // key-less counting API (https://countapi.mileshilliard.com/) - no
+        // API key involved, so there's nothing here that could leak.
         //
-        // "Unique" is enforced client-side only: the first time a browser
-        // visits, we set a flag in localStorage and increment the shared
-        // counter. On every visit after that, we just read the current
-        // total without incrementing it. This isn't foolproof (clearing
-        // site data, incognito mode, or a different browser all reset it),
-        // but it stops plain refresh-spam and casual inflation without
-        // storing IPs or anything else about the visitor.
+        // Why not just localStorage? A flag stored on the visitor's own
+        // machine is trivial to wipe (clear site data, incognito, a
+        // "forget me" extension) and refresh-spam right back in. So instead
+        // the actual gatekeeping happens server-side: we hash a few coarse,
+        // already-public browser signals (language, timezone, screen size,
+        // core count, platform, user agent) into a short key, combine it
+        // with today's date, and ask the counter API "has this combo been
+        // seen today?" That answer lives on countapi's server, not the
+        // visitor's - so clearing local storage no longer resets anything.
+        // localStorage is still used, but only as a same-day shortcut to
+        // skip the extra network round trip, never as the source of truth.
+        //
+        // Caveats, in the interest of being upfront:
+        //  - This is NOT IP tracking and NOT canvas/identity fingerprinting.
+        //    It's a handful of coarse signals many devices share, so two
+        //    different people on very similar setups in the same timezone
+        //    could occasionally collide into one count. For a lightweight
+        //    anti-spam counter that's a fine trade-off.
+        //  - It resets every day (UTC), so this counts unique visitors *per
+        //    day*, summed over time - not unique visitors ever. A returning
+        //    visitor tomorrow counts again. Say if you'd rather it be a
+        //    one-time-ever count instead.
+        //  - Someone determined enough to spoof their user agent and resize
+        //    their window each time could still bypass it - but that's a
+        //    much higher bar than "clear storage and refresh."
+        //  - All countapi keys/values are public to anyone who knows or
+        //    guesses them - same as before, just a hash instead of plain
+        //    text now.
         (function () {
             const countEl = document.getElementById("visitorCount");
             // Change this key if you ever want to reset the count - it just
             // starts a brand-new counter under the new name.
             const counterKey = "yeshub-yesdev-site-visits";
-            const seenFlag = "yeshub_counted";
             const base = "https://countapi.mileshilliard.com/api/v1";
 
             function render(value) {
@@ -1038,32 +1058,80 @@ task.spawn(function()
                     : "-";
             }
 
-            let alreadyCounted = false;
-            try {
-                alreadyCounted = localStorage.getItem(seenFlag) === "1";
-            } catch (e) {
-                // localStorage unavailable (private mode, blocked, etc.) -
-                // fall back to treating every load as a new visit.
+            function todayUTC() {
+                return new Date().toISOString().slice(0, 10); // YYYY-MM-DD
             }
 
-            const endpoint = alreadyCounted
-                ? `${base}/get/${counterKey}`
-                : `${base}/hit/${counterKey}`;
+            // Small, fast, non-cryptographic hash (FNV-1a). This only needs
+            // to be good enough to bucket similar devices together - not to
+            // be secure or reversible.
+            function fnv1a(str) {
+                let hash = 0x811c9dc5;
+                for (let i = 0; i < str.length; i++) {
+                    hash ^= str.charCodeAt(i);
+                    hash = (hash * 0x01000193) >>> 0;
+                }
+                return hash.toString(16);
+            }
 
-            fetch(endpoint)
+            function deviceHash() {
+                const signal = [
+                    navigator.userAgent,
+                    navigator.language,
+                    new Date().getTimezoneOffset(),
+                    `${screen.width}x${screen.height}x${screen.colorDepth}`,
+                    navigator.hardwareConcurrency || "",
+                    navigator.platform || "",
+                ].join("|");
+                return fnv1a(signal);
+            }
+
+            const day = todayUTC();
+            const localFlag = `yeshub_counted_${day}`;
+
+            function getMainCount(didIncrement) {
+                const endpoint = didIncrement
+                    ? `${base}/hit/${counterKey}`
+                    : `${base}/get/${counterKey}`;
+                return fetch(endpoint)
+                    .then((res) => res.json())
+                    .then((data) => render(data.value));
+            }
+
+            function markLocalFlag() {
+                try {
+                    localStorage.setItem(localFlag, "1");
+                } catch (e) {
+                    // ignore - worst case we skip the local shortcut next time
+                }
+            }
+
+            let localShortcut = false;
+            try {
+                localShortcut = localStorage.getItem(localFlag) === "1";
+            } catch (e) {
+                // localStorage unavailable - fall through to the
+                // server-side check below, which still works fine.
+            }
+
+            if (localShortcut) {
+                // Already confirmed as counted today on this browser -
+                // skip the fingerprint round trip and just show the total.
+                getMainCount(false).catch(() => render(null));
+                return;
+            }
+
+            const dayKey = `yeshub-seen-${deviceHash()}-${day}`;
+
+            fetch(`${base}/hit/${dayKey}`)
                 .then((res) => res.json())
                 .then((data) => {
-                    render(data.value);
-                    if (!alreadyCounted) {
-                        try {
-                            localStorage.setItem(seenFlag, "1");
-                        } catch (e) {
-                            // ignore - worst case this visitor gets counted
-                            // again next time
-                        }
-                    }
+                    const firstTimeToday = Number(data.value) === 1;
+                    markLocalFlag();
+                    return getMainCount(firstTimeToday);
                 })
                 .catch(() => render(null));
+
         })();
     </script>
 
