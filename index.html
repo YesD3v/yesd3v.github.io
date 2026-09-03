@@ -118,6 +118,75 @@
             );
         }
 
+        /* Visitor Counter */
+
+        .visitor-counter {
+            position: fixed;
+            top: 22px;
+            left: 22px;
+            z-index: 50;
+
+            display: flex;
+            align-items: center;
+            gap: 9px;
+
+            padding: 9px 15px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,.045),
+                    rgba(255,255,255,.012) 50%,
+                    rgba(0,0,0,.35)
+                ),
+                #070707;
+
+            border: 1px solid var(--border);
+            border-radius: 999px;
+
+            box-shadow:
+                inset 0 1px rgba(255,255,255,.025),
+                0 15px 40px rgba(0,0,0,.4);
+
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+
+            user-select: none;
+        }
+
+        .visitor-counter svg {
+            width: 15px;
+            height: 15px;
+            flex-shrink: 0;
+            fill: #fff;
+            opacity: .8;
+        }
+
+        .visitor-count {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: .01em;
+            color: #ccc;
+            font-variant-numeric: tabular-nums;
+        }
+
+        @media (max-width: 600px) {
+            .visitor-counter {
+                top: 14px;
+                left: 14px;
+                padding: 7px 12px;
+            }
+
+            .visitor-counter svg {
+                width: 13px;
+                height: 13px;
+            }
+
+            .visitor-count {
+                font-size: 11px;
+            }
+        }
+
         /* Main */
 
         .container {
@@ -707,6 +776,13 @@
 
     <div class="floor"></div>
 
+    <div class="visitor-counter" id="visitorCounter" title="Total site visits">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 5C6.5 5 2.3 8.5 1 12c1.3 3.5 5.5 7 11 7s9.7-3.5 11-7c-1.3-3.5-5.5-7-11-7zm0 12c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+        </svg>
+        <span class="visitor-count" id="visitorCount">—</span>
+    </div>
+
     <main class="container">
 
         <header class="brand">
@@ -934,6 +1010,28 @@ task.spawn(function()
                 }, 1400);
             });
         }
+
+        // Visitor counter — increments a shared hit counter each time the page loads
+        // and displays the running total. Uses countapi.mileshilliard.com, a free,
+        // key-less counting API (https://countapi.mileshilliard.com/).
+        (function () {
+            const countEl = document.getElementById("visitorCount");
+            // Change this key if you ever want to reset the count — it just
+            // starts a brand-new counter under the new name.
+            const counterKey = "yeshub-yesdev-site-visits";
+
+            fetch(`https://countapi.mileshilliard.com/api/v1/hit/${counterKey}`)
+                .then((res) => res.json())
+                .then((data) => {
+                    const value = Number(data.value);
+                    countEl.textContent = Number.isFinite(value)
+                        ? value.toLocaleString()
+                        : "—";
+                })
+                .catch(() => {
+                    countEl.textContent = "—";
+                });
+        })();
     </script>
 
 </body>
