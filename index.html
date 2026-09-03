@@ -1026,10 +1026,10 @@ task.spawn(function()
                     const value = Number(data.value);
                     countEl.textContent = Number.isFinite(value)
                         ? value.toLocaleString()
-                        : "-";
+                        : "—";
                 })
                 .catch(() => {
-                    countEl.textContent = "-";
+                    countEl.textContent = "—";
                 });
         })();
     </script>
