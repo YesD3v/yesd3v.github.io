@@ -786,7 +786,9 @@
         <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M12 5C6.5 5 2.3 8.5 1 12c1.3 3.5 5.5 7 11 7s9.7-3.5 11-7c-1.3-3.5-5.5-7-11-7zm0 12c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
         </svg>
-        <span class="visitor-count" id="visitorCount">-</span>
+        <span class="visitor-count" id="visitorCount">
+            <span id="visitorCountWidget"></span>
+        </span>
     </div>
 
     <main class="container">
@@ -1017,19 +1019,64 @@ task.spawn(function()
             });
         }
 
-
+        // Visitor counter - the actual counting happens server-side via
+        // GoatCounter (the <script data-goatcounter=...> tag up in <head>).
+        // GoatCounter dedupes visits itself (hashed IP+user-agent, ~8 hour
+        // session window, filters known bots) - none of that logic lives in
+        // this page, so it can't be bypassed by clearing local storage or
+        // spoofing a browser fingerprint the way our old homemade version
+        // could be.
+        //
+        // For displaying the number, we use GoatCounter's own official
+        // visit_count() widget rather than fetching /counter/TOTAL.json
+        // ourselves - a plain fetch() from a different domain (your GitHub
+        // Pages site) needs the server's explicit go-ahead (CORS) to let
+        // JavaScript read the response, and that endpoint isn't guaranteed
+        // to give it. The widget is GoatCounter's supported path for
+        // exactly this kind of cross-domain embedding, so it sidesteps
+        // that problem entirely. We restyle it via their documented CSS
+        // hooks so it looks like plain text instead of their default boxed
+        // widget.
+        //
+        // GoatCounter site: yesdev.goatcounter.com. The number is cached
+        // for up to ~4 hours on GoatCounter's end, so it won't update
+        // instantly after a new visit - that's expected, not a bug.
         (function () {
-            const countEl = document.getElementById("visitorCount");
-            const goatCode = "yesdev";
-
-            fetch(`https://${goatCode}.goatcounter.com/counter/TOTAL.json`)
-                .then((res) => res.json())
-                .then((data) => {
-                    countEl.textContent = data.count || "-";
-                })
-                .catch(() => {
-                    countEl.textContent = "-";
+            function renderWidget() {
+                window.goatcounter.visit_count({
+                    append: "#visitorCountWidget",
+                    type: "html",
+                    no_branding: true,
+                    attr: { title: "" },
+                    style: `
+                        div { all: unset !important; }
+                        #gcvc-for { display: none !important; }
+                        #gcvc-views {
+                            font-size: 12px !important;
+                            font-weight: 700 !important;
+                            font-family: Arial, Helvetica, sans-serif !important;
+                            color: #ccc !important;
+                            letter-spacing: .01em !important;
+                        }
+                    `,
                 });
+            }
+
+            // count.js loads async, so wait until window.goatcounter is
+            // actually ready before calling visit_count(). Give up after
+            // ~5 seconds (e.g. count.js itself got blocked) so the badge
+            // doesn't spin forever.
+            let attempts = 0;
+            const t = setInterval(function () {
+                attempts++;
+                if (window.goatcounter && window.goatcounter.visit_count) {
+                    clearInterval(t);
+                    renderWidget();
+                } else if (attempts > 50) {
+                    clearInterval(t);
+                    document.getElementById("visitorCount").textContent = "-";
+                }
+            }, 100);
         })();
     </script>
 
