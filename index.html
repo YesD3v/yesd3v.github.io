@@ -776,11 +776,11 @@
 
     <div class="floor"></div>
 
-    <div class="visitor-counter" id="visitorCounter" title="Total site visits">
+    <div class="visitor-counter" id="visitorCounter" title="Unique visitors (per browser)">
         <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M12 5C6.5 5 2.3 8.5 1 12c1.3 3.5 5.5 7 11 7s9.7-3.5 11-7c-1.3-3.5-5.5-7-11-7zm0 12c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
         </svg>
-        <span class="visitor-count" id="visitorCount">—</span>
+        <span class="visitor-count" id="visitorCount">-</span>
     </div>
 
     <main class="container">
@@ -1011,26 +1011,59 @@ task.spawn(function()
             });
         }
 
-        // Visitor counter — increments a shared hit counter each time the page loads
-        // and displays the running total. Uses countapi.mileshilliard.com, a free,
-        // key-less counting API (https://countapi.mileshilliard.com/).
+        // Visitor counter - counts (roughly) unique visitors rather than raw
+        // page loads. Uses countapi.mileshilliard.com, a free, key-less
+        // counting API (https://countapi.mileshilliard.com/) - no API key
+        // involved, so there's nothing here that could leak.
+        //
+        // "Unique" is enforced client-side only: the first time a browser
+        // visits, we set a flag in localStorage and increment the shared
+        // counter. On every visit after that, we just read the current
+        // total without incrementing it. This isn't foolproof (clearing
+        // site data, incognito mode, or a different browser all reset it),
+        // but it stops plain refresh-spam and casual inflation without
+        // storing IPs or anything else about the visitor.
         (function () {
             const countEl = document.getElementById("visitorCount");
-            // Change this key if you ever want to reset the count — it just
+            // Change this key if you ever want to reset the count - it just
             // starts a brand-new counter under the new name.
             const counterKey = "yeshub-yesdev-site-visits";
+            const seenFlag = "yeshub_counted";
+            const base = "https://countapi.mileshilliard.com/api/v1";
 
-            fetch(`https://countapi.mileshilliard.com/api/v1/hit/${counterKey}`)
+            function render(value) {
+                const num = Number(value);
+                countEl.textContent = Number.isFinite(num)
+                    ? num.toLocaleString()
+                    : "-";
+            }
+
+            let alreadyCounted = false;
+            try {
+                alreadyCounted = localStorage.getItem(seenFlag) === "1";
+            } catch (e) {
+                // localStorage unavailable (private mode, blocked, etc.) -
+                // fall back to treating every load as a new visit.
+            }
+
+            const endpoint = alreadyCounted
+                ? `${base}/get/${counterKey}`
+                : `${base}/hit/${counterKey}`;
+
+            fetch(endpoint)
                 .then((res) => res.json())
                 .then((data) => {
-                    const value = Number(data.value);
-                    countEl.textContent = Number.isFinite(value)
-                        ? value.toLocaleString()
-                        : "—";
+                    render(data.value);
+                    if (!alreadyCounted) {
+                        try {
+                            localStorage.setItem(seenFlag, "1");
+                        } catch (e) {
+                            // ignore - worst case this visitor gets counted
+                            // again next time
+                        }
+                    }
                 })
-                .catch(() => {
-                    countEl.textContent = "—";
-                });
+                .catch(() => render(null));
         })();
     </script>
 
