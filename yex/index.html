@@ -140,6 +140,7 @@
         /* ── Center card ─────────────────────────────────────────── */
 
         .card {
+            position: relative;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -199,6 +200,29 @@
             color: rgba(255,255,255,.35);
             font-weight: 600;
             letter-spacing: .02em;
+        }
+
+        /* ── Download counter ────────────────────────────────────── */
+
+        .dl-counter {
+            position: absolute;
+            top: 20px;
+            left: 22px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            color: rgba(255,255,255,.28);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: .04em;
+            user-select: none;
+        }
+
+        .dl-counter svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+            flex-shrink: 0;
         }
 
         /* ── Download button ─────────────────────────────────────── */
@@ -291,6 +315,11 @@
     <!-- Card -->
     <div class="card">
 
+        <div class="dl-counter" id="dlCounter">
+            <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;flex-shrink:0"><path d="M19 9h-4V3H9v6H5l7 7 7-7zm-14 9v2h14v-2H5z"/></svg>
+            <span id="dlCount">—</span>
+        </div>
+
         <div class="logo-wrap">
             <img src="/assets/Yex.png" alt="Yex Executor">
         </div>
@@ -314,6 +343,25 @@
         <div class="meta">Yex.exe</div>
 
     </div>
+
+    <script>
+        (async function () {
+            try {
+                const res = await fetch(
+                    "https://api.github.com/repos/YesD3v/yesd3v.github.io/releases/tags/release",
+                    { headers: { Accept: "application/vnd.github+json" } }
+                );
+                if (!res.ok) throw new Error();
+                const data = await res.json();
+                const asset = (data.assets || []).find(a => a.name === "Yex.exe");
+                const count = asset ? asset.download_count : 0;
+                document.getElementById("dlCount").textContent =
+                    new Intl.NumberFormat("en").format(count);
+            } catch {
+                document.getElementById("dlCounter").style.display = "none";
+            }
+        })();
+    </script>
 
 </body>
 </html>
