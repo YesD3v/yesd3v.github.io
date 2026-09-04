@@ -9,12 +9,6 @@
     <link rel="icon" type="image/png" href="/assets/YesHub.png">
     <link rel="shortcut icon" type="image/png" href="/assets/YesHub.png">
 
-    <!--
-        GoatCounter tracking script - records each visit server-side with
-        its own session deduping and bot filtering.
-    -->
-    <script data-goatcounter="https://yesdev.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
-
     <style>
         * {
             margin: 0;
@@ -32,19 +26,15 @@
 
         html {
             width: 100%;
-            height: 100%;
-            overflow: hidden;
             scroll-behavior: smooth;
         }
 
         body {
             width: 100%;
-            height: 100%;
             min-height: 100vh;
             background: #000;
             color: #fff;
             font-family: Arial, Helvetica, sans-serif;
-            overflow: hidden;
         }
 
         body::before {
@@ -124,84 +114,13 @@
             );
         }
 
-        /* Visitor Counter */
-
-        .visitor-counter {
-            position: fixed;
-            top: 22px;
-            left: 22px;
-            z-index: 50;
-
-            display: flex;
-            align-items: center;
-            gap: 9px;
-
-            padding: 9px 15px;
-
-            background:
-                linear-gradient(
-                    145deg,
-                    rgba(255,255,255,.045),
-                    rgba(255,255,255,.012) 50%,
-                    rgba(0,0,0,.35)
-                ),
-                #070707;
-
-            border: 1px solid var(--border);
-            border-radius: 999px;
-
-            box-shadow:
-                inset 0 1px rgba(255,255,255,.025),
-                0 15px 40px rgba(0,0,0,.4);
-
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-
-            user-select: none;
-        }
-
-        .visitor-counter svg {
-            width: 15px;
-            height: 15px;
-            flex-shrink: 0;
-            fill: #fff;
-            opacity: .8;
-        }
-
-        .visitor-count {
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: .01em;
-            color: #ccc;
-            font-variant-numeric: tabular-nums;
-        }
-
-        @media (max-width: 600px) {
-            .visitor-counter {
-                top: 14px;
-                left: 14px;
-                padding: 7px 12px;
-            }
-
-            .visitor-counter svg {
-                width: 13px;
-                height: 13px;
-            }
-
-            .visitor-count {
-                font-size: 11px;
-            }
-        }
-
         /* Main */
 
         .container {
             width: min(1200px, calc(100% - 48px));
-            height: 100vh;
+            min-height: 100vh;
             margin: auto;
             padding: 55px 0 60px;
-
-            overflow: hidden;
         }
 
         .brand {
@@ -339,6 +258,28 @@
                 0 25px 70px rgba(0,0,0,.5);
         }
 
+        .community-card.github-card {
+            border: 1px solid rgba(255, 255, 255, .16);
+        }
+
+        .community-card.github-card:hover {
+            border-color: rgba(255, 255, 255, .35);
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,.075),
+                    rgba(255,255,255,.012) 50%,
+                    rgba(0,0,0,.35)
+                ),
+                #070707;
+
+            box-shadow:
+                inset 0 1px rgba(255,255,255,.035),
+                0 0 20px rgba(255,255,255,.09),
+                0 25px 70px rgba(0,0,0,.5);
+        }
+
         .community-icon {
             flex-shrink: 0;
 
@@ -375,6 +316,16 @@
             object-fit: contain;
         }
 
+        .github-card .community-icon {
+            border: 1px solid rgba(255,255,255,.20);
+        }
+
+        .github-card .community-icon svg {
+            width: 30px;
+            height: 30px;
+            fill: #fff;
+        }
+
         .community-info {
             display: flex;
             flex-direction: column;
@@ -393,10 +344,18 @@
             line-height: 1.5;
         }
 
-        /* Yex Executor Download */
+        /* Yex Executor + GitHub */
+
+        .action-links {
+            margin-top: 28px;
+
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 24px;
+            align-items: stretch;
+        }
 
         .download-box {
-            margin-top: 28px;
             padding: 24px 26px;
 
             display: flex;
@@ -489,19 +448,101 @@
                 0 0 18px rgba(255,255,255,.07);
         }
 
-        /* Repositories */
+        /* ScriptBlox Scripts */
 
-        .repositories {
+        .scriptblox-scripts {
             margin-top: 28px;
-
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 24px;
         }
 
-        .repo {
-            position: relative;
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: #999;
+        }
+
+        .section-link {
+            flex-shrink: 0;
+
+            color: #888;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+
+            padding: 7px 10px;
+            border-radius: 7px;
+
+            transition:
+                color .2s ease,
+                background .2s ease;
+        }
+
+        .section-link:hover {
+            color: #fff;
+            background: rgba(255,255,255,.07);
+        }
+
+        .scripts-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .scripts-status {
+            grid-column: 1 / -1;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+
+            padding: 34px 20px;
+            text-align: center;
+
+            color: #666;
+            font-size: 12.5px;
+            font-weight: 600;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,.03),
+                    rgba(0,0,0,.35)
+                ),
+                #070707;
+
+            border: 1px solid var(--border);
+            border-radius: 16px;
+        }
+
+        .scripts-status a {
+            color: #fff;
+            font-weight: 700;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255,255,255,.3);
+        }
+
+        .scripts-status a:hover {
+            border-color: rgba(255,255,255,.7);
+        }
+
+        .script-card {
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
+
+            color: #fff;
+            text-decoration: none;
 
             background:
                 linear-gradient(
@@ -525,168 +566,96 @@
                 box-shadow .25s ease;
         }
 
-        .repo:hover {
+        .script-card:hover {
             transform: translateY(-3px);
-            border-color: rgba(255,255,255,.16);
+            border-color: rgba(139,92,246,.5);
 
             box-shadow:
                 inset 0 1px rgba(255,255,255,.04),
+                0 0 20px rgba(139,92,246,.12),
                 0 25px 70px rgba(0,0,0,.5);
         }
 
-        .repo::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 8%;
-            right: 8%;
-            height: 1px;
+        .script-thumb {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
 
-            background: linear-gradient(
-                90deg,
-                transparent,
-                rgba(255,255,255,.16),
-                transparent
-            );
+            background: linear-gradient(145deg, #0c0c0c, #060606);
+            border-bottom: 1px solid rgba(255,255,255,.06);
+
+            overflow: hidden;
         }
 
-        .repo-header {
-            height: 64px;
-            padding: 0 18px;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            border-bottom: 1px solid rgba(255,255,255,.07);
+        .script-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
         }
 
-        .repo-name {
-            display: flex;
-            align-items: center;
-            gap: 11px;
+        .script-body {
+            padding: 16px 18px 18px;
 
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .script-title {
             font-size: 14px;
+            font-weight: 800;
+            letter-spacing: .01em;
+            line-height: 1.35;
+
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .script-game {
+            color: #888;
+            font-size: 11.5px;
+            font-weight: 600;
+        }
+
+        .script-stats {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 2px;
+
+            color: #666;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .script-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .script-badge {
+            padding: 3px 8px;
+            border-radius: 999px;
+
+            background: rgba(139,92,246,.12);
+            border: 1px solid rgba(139,92,246,.30);
+            color: #c4b5fd;
+
+            font-size: 10px;
             font-weight: 700;
             letter-spacing: .02em;
         }
 
-        .github-icon {
-            width: 18px;
-            height: 18px;
-            fill: #fff;
-            opacity: .9;
-        }
-
-        .repo-link {
-            color: #888;
-            text-decoration: none;
-            font-size: 12px;
-            font-weight: 600;
-
-            padding: 7px 10px;
-            border-radius: 7px;
-
-            transition:
-                color .2s ease,
-                background .2s ease;
-        }
-
-        .repo-link:hover {
-            color: #fff;
-            background: rgba(255,255,255,.07);
-        }
-
-        /* Code */
-
-        .code-wrapper {
-            position: relative;
-            padding: 18px;
-        }
-
-        .code {
-            position: relative;
-            height: 280px;
-            overflow: hidden;
-
-            padding: 18px;
-
-            background:
-                linear-gradient(
-                    145deg,
-                    #030303,
-                    #090909
-                );
-
-            border: 1px solid rgba(255,255,255,.06);
-            border-radius: 10px;
-
-            color: #bcbcbc;
-
-            font-family:
-                "SFMono-Regular",
-                Consolas,
-                "Liberation Mono",
-                monospace;
-
-            font-size: 12px;
-            line-height: 1.75;
-
-            white-space: pre;
-            tab-size: 4;
-
-            box-shadow:
-                inset 0 0 35px rgba(0,0,0,.6);
-        }
-
-        /* Copy */
-
-        .copy {
-            position: absolute;
-            top: 28px;
-            right: 28px;
-
-            display: flex;
-            align-items: center;
-            gap: 7px;
-
-            padding: 8px 11px;
-
-            border: 1px solid rgba(255,255,255,.08);
-            border-radius: 7px;
-
-            background: rgba(12,12,12,.88);
-            color: #888;
-
-            font-size: 11px;
-            font-weight: 700;
-
-            cursor: pointer;
-
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-
-            transition:
-                color .2s ease,
-                border-color .2s ease,
-                background .2s ease;
-        }
-
-        .copy svg {
-            width: 13px;
-            height: 13px;
-            fill: currentColor;
-        }
-
-        .copy:hover {
-            color: #fff;
-            border-color: rgba(255,255,255,.2);
-            background: rgba(25,25,25,.95);
-        }
-
-        .copy.copied {
-            color: #fff;
-            border-color: rgba(255,255,255,.3);
+        .script-badge.patched {
+            background: rgba(239,68,68,.12);
+            border-color: rgba(239,68,68,.35);
+            color: #fca5a5;
         }
 
         /* Mobile */
@@ -696,8 +665,12 @@
                 grid-template-columns: 1fr;
             }
 
-            .repositories {
+            .action-links {
                 grid-template-columns: 1fr;
+            }
+
+            .scripts-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
             }
 
             .download-box {
@@ -753,6 +726,11 @@
                 height: 31px;
             }
 
+            .github-card .community-icon svg {
+                width: 26px;
+                height: 26px;
+            }
+
             .community-title {
                 font-size: 16px;
             }
@@ -761,18 +739,22 @@
                 font-size: 11px;
             }
 
+            .action-links {
+                margin-top: 22px;
+                gap: 16px;
+            }
+
             .download-box {
-                margin-top: 28px;
                 padding: 20px;
             }
 
-            .repositories {
+            .scriptblox-scripts {
                 margin-top: 22px;
             }
 
-            .code {
-                height: 250px;
-                font-size: 11px;
+            .scripts-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
             }
         }
     </style>
@@ -781,15 +763,6 @@
 <body>
 
     <div class="floor"></div>
-
-    <div class="visitor-counter" id="visitorCounter" title="Total site visits">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M12 5C6.5 5 2.3 8.5 1 12c1.3 3.5 5.5 7 11 7s9.7-3.5 11-7c-1.3-3.5-5.5-7-11-7zm0 12c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
-        </svg>
-        <span class="visitor-count" id="visitorCount">
-            <span id="visitorCountWidget"></span>
-        </span>
-    </div>
 
     <main class="container">
 
@@ -847,237 +820,232 @@
 
         </section>
 
-        <!-- Yex Executor -->
+        <!-- Yex Executor + GitHub -->
 
-        <section class="download-box">
+        <section class="action-links">
 
-            <div class="download-info">
-                <div class="download-title">Yex Executor</div>
-                <div class="download-subtitle">
-                    Download the latest version of Yex Executor
+            <div class="download-box">
+
+                <div class="download-info">
+                    <div class="download-title">Yex Executor</div>
+                    <div class="download-subtitle">
+                        Download the latest version of Yex Executor
+                    </div>
                 </div>
+
+                <a
+                    class="download-button"
+                    href="https://gofile.io/d/UFWYg3Sn"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <svg viewBox="0 0 24 24">
+                        <path d="M19 9h-4V3H9v6H5l7 7 7-7zm-14 9v2h14v-2H5z"/>
+                    </svg>
+                    Download
+                </a>
+
             </div>
 
             <a
-                class="download-button"
-                href="https://gofile.io/d/UFWYg3Sn"
+                class="community-card github-card"
+                href="https://github.com/yes-d3v-scripts"
                 target="_blank"
                 rel="noopener noreferrer"
             >
-                <svg viewBox="0 0 24 24">
-                    <path d="M19 9h-4V3H9v6H5l7 7 7-7zm-14 9v2h14v-2H5z"/>
-                </svg>
-                Download
+                <div class="community-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55v-2.16c-3.2.7-3.87-1.54-3.87-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.25 3.34.95.1-.74.4-1.25.73-1.54-2.55-.29-5.23-1.28-5.23-5.69 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.47.11-3.06 0 0 .96-.31 3.15 1.18a10.9 10.9 0 0 1 5.74 0c2.19-1.49 3.15-1.18 3.15-1.18.62 1.59.23 2.77.11 3.06.73.81 1.18 1.84 1.18 3.1 0 4.42-2.69 5.39-5.25 5.68.41.35.78 1.04.78 2.1v3.11c0 .3.21.66.79.55A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/>
+                    </svg>
+                </div>
+
+                <div class="community-info">
+                    <div class="community-title">GitHub</div>
+                    <div class="community-subtitle">
+                        yes-d3v-scripts — source &amp; repos
+                    </div>
+                </div>
             </a>
 
         </section>
 
-        <section class="repositories">
+        <!-- ScriptBlox Scripts -->
 
-            <!-- Super Ring -->
+        <section class="scriptblox-scripts">
 
-            <article class="repo">
+            <div class="section-header">
+                <div class="section-title">ScriptBlox Scripts</div>
+                <a
+                    class="section-link"
+                    href="https://scriptblox.com/u/YesDev"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    View Profile ↗
+                </a>
+            </div>
 
-                <div class="repo-header">
-
-                    <div class="repo-name">
-                        <svg class="github-icon" viewBox="0 0 24 24">
-                            <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55v-2.16c-3.2.7-3.87-1.54-3.87-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.25 3.34.95.1-.74.4-1.25.73-1.54-2.55-.29-5.23-1.28-5.23-5.69 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.47.11-3.06 0 0 .96-.31 3.15 1.18a10.9 10.9 0 0 1 5.74 0c2.19-1.49 3.15-1.18 3.15-1.18.62 1.59.23 2.77.11 3.06.73.81 1.18 1.84 1.18 3.1 0 4.42-2.69 5.39-5.25 5.68.41.35.78 1.04.78 2.1v3.11c0 .3.21.66.79.55A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/>
-                        </svg>
-
-                        Super Ring
-                    </div>
-
-                    <a
-                        class="repo-link"
-                        href="https://github.com/yes-d3v-scripts/super-ring"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        View Repo ↗
-                    </a>
-
-                </div>
-
-                <div class="code-wrapper">
-
-                    <button class="copy" onclick="copyCode(this, 'code1')">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
-                        </svg>
-                        Copy
-                    </button>
-
-                    <pre class="code" id="code1">local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local UserInputService = game:GetService("UserInputService")
-local LocalPlayer = Players.LocalPlayer
-local Workspace = game:GetService("Workspace")
-
-local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-
-local Folder = Instance.new("Folder", Workspace)
-local Part = Instance.new("Part", Folder)
-local Attachment1 = Instance.new("Attachment", Part)
-Part.Anchored = true
-Part.CanCollide = false
-Part.Transparency = 1
-
-if not getgenv().Network then
-    getgenv().Network = {
-        BaseParts = {},
-... </pre>
-
-                </div>
-
-            </article>
-
-            <!-- Drop Kick Fling -->
-
-            <article class="repo">
-
-                <div class="repo-header">
-
-                    <div class="repo-name">
-                        <svg class="github-icon" viewBox="0 0 24 24">
-                            <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55v-2.16c-3.2.7-3.87-1.54-3.87-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.25 3.34.95.1-.74.4-1.25.73-1.54-2.55-.29-5.23-1.28-5.23-5.69 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.47.11-3.06 0 0 .96-.31 3.15 1.18a10.9 10.9 0 0 1 5.74 0c2.19-1.49 3.15-1.18 3.15-1.18.62 1.59.23 2.77.11 3.06.73.81 1.18 1.84 1.18 3.1 0 4.42-2.69 5.39-5.25 5.68.41.35.78 1.04.78 2.1v3.11c0 .3.21.66.79.55A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/>
-                        </svg>
-
-                        Drop Kick Fling
-                    </div>
-
-                    <a
-                        class="repo-link"
-                        href="https://github.com/yes-d3v-scripts/drop-kick-fling"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        View Repo ↗
-                    </a>
-
-                </div>
-
-                <div class="code-wrapper">
-
-                    <button class="copy" onclick="copyCode(this, 'code2')">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
-                        </svg>
-                        Copy
-                    </button>
-
-                    <pre class="code" id="code2">local utility = {
-    dropkick = Instance.new("Animation"),
-    Players = game:GetService("Players"),
-    RunService = game:GetService("RunService"),
-    UserInputService = game:GetService("UserInputService"),
-    TweenService = game:GetService("TweenService"),
-    Debris = game:GetService("Debris"),
-    HttpService = game:GetService("HttpService"),
-    StarterGui = game:GetService("StarterGui"),
-    conns = {}
-}
-
-utility.dropkick.AnimationId = "rbxassetid://133566007754001"
-
-task.spawn(function()
-    local instancesToLoad = {}
-    table.insert(instancesToLoad, utility.dropkick)
-    
-    local gearPreload = Instance.new("ImageLabel")
-... </pre>
-
-                </div>
-
-            </article>
+            <div class="scripts-grid" id="scriptsGrid">
+                <div class="scripts-status" id="scriptsStatus">Loading scripts…</div>
+            </div>
 
         </section>
 
     </main>
 
     <script>
-        function copyCode(button, id) {
-            const code = document.getElementById(id).innerText;
+        // ScriptBlox scripts preview
+        //
+        // Pulls every script uploaded by this account straight from
+        // ScriptBlox's public API (documented at docs.scriptblox.com) with
+        // a plain client-side fetch - no key or backend needed. If the
+        // request gets rate limited, blocked by CORS, or otherwise fails,
+        // we fall back to a small inline notice with a link to the live
+        // profile instead of leaving a blank section.
 
-            navigator.clipboard.writeText(code).then(() => {
-                const original = button.innerHTML;
+        const SCRIPTBLOX_OWNER = "YesDev";
+        const SCRIPTBLOX_PROFILE_URL = "https://scriptblox.com/u/YesDev";
+        const SCRIPTBLOX_API_URL =
+            "https://scriptblox.com/api/script/fetch?owner=" +
+            encodeURIComponent(SCRIPTBLOX_OWNER) +
+            "&max=20&sortBy=createdAt&order=desc";
 
-                button.classList.add("copied");
-
-                button.innerHTML = `
-                    <svg viewBox="0 0 24 24">
-                        <path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-                    </svg>
-                    Copied
-                `;
-
-                setTimeout(() => {
-                    button.classList.remove("copied");
-                    button.innerHTML = original;
-                }, 1400);
-            });
+        function formatCompactNumber(n) {
+            if (typeof n !== "number" || isNaN(n)) return "0";
+            return new Intl.NumberFormat("en", {
+                notation: "compact",
+                maximumFractionDigits: 1,
+            }).format(n);
         }
 
-        // Visitor counter - the actual counting happens server-side via
-        // GoatCounter (the <script data-goatcounter=...> tag up in <head>).
-        // GoatCounter dedupes visits itself (hashed IP+user-agent, ~8 hour
-        // session window, filters known bots) - none of that logic lives in
-        // this page, so it can't be bypassed by clearing local storage or
-        // spoofing a browser fingerprint the way our old homemade version
-        // could be.
-        //
-        // For displaying the number, we use GoatCounter's own official
-        // visit_count() widget rather than fetching /counter/TOTAL.json
-        // ourselves - a plain fetch() from a different domain (your GitHub
-        // Pages site) needs the server's explicit go-ahead (CORS) to let
-        // JavaScript read the response, and that endpoint isn't guaranteed
-        // to give it. The widget is GoatCounter's supported path for
-        // exactly this kind of cross-domain embedding, so it sidesteps
-        // that problem entirely. We restyle it via their documented CSS
-        // hooks so it looks like plain text instead of their default boxed
-        // widget.
-        //
-        // GoatCounter site: yesdev.goatcounter.com. The number is cached
-        // for up to ~4 hours on GoatCounter's end, so it won't update
-        // instantly after a new visit - that's expected, not a bug.
-        (function () {
-            function renderWidget() {
-                window.goatcounter.visit_count({
-                    append: "#visitorCountWidget",
-                    type: "html",
-                    no_branding: true,
-                    attr: { title: "" },
-                    style: `
-                        div { all: unset !important; }
-                        #gcvc-for { display: none !important; }
-                        #gcvc-views {
-                            font-size: 12px !important;
-                            font-weight: 700 !important;
-                            font-family: Arial, Helvetica, sans-serif !important;
-                            color: #ccc !important;
-                            letter-spacing: .01em !important;
-                        }
-                    `,
-                });
+        function timeAgo(dateStr) {
+            const date = new Date(dateStr);
+            if (isNaN(date.getTime())) return "";
+
+            const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+            const units = [
+                ["year", 31536000],
+                ["month", 2592000],
+                ["week", 604800],
+                ["day", 86400],
+                ["hour", 3600],
+                ["minute", 60],
+            ];
+
+            for (const [name, secs] of units) {
+                const count = Math.floor(seconds / secs);
+                if (count >= 1) return count + " " + name + (count > 1 ? "s" : "") + " ago";
             }
 
-            // count.js loads async, so wait until window.goatcounter is
-            // actually ready before calling visit_count(). Give up after
-            // ~5 seconds (e.g. count.js itself got blocked) so the badge
-            // doesn't spin forever.
-            let attempts = 0;
-            const t = setInterval(function () {
-                attempts++;
-                if (window.goatcounter && window.goatcounter.visit_count) {
-                    clearInterval(t);
-                    renderWidget();
-                } else if (attempts > 50) {
-                    clearInterval(t);
-                    document.getElementById("visitorCount").textContent = "-";
+            return "just now";
+        }
+
+        function resolveImage(path, fallback) {
+            const src = path || fallback;
+            if (!src) return "";
+            if (/^https?:\/\//i.test(src)) return src;
+            return "https://scriptblox.com" + (src.startsWith("/") ? "" : "/") + src;
+        }
+
+        function escapeHTML(str) {
+            const div = document.createElement("div");
+            div.textContent = str == null ? "" : String(str);
+            return div.innerHTML;
+        }
+
+        function renderScriptCard(script) {
+            const title = escapeHTML(script.title || "Untitled script");
+            const gameName = escapeHTML((script.game && script.game.name) || "Universal");
+            const thumb = resolveImage(script.image, script.game && script.game.imageUrl);
+            const url = "https://scriptblox.com/script/" + encodeURIComponent(script.slug || "");
+            const views = formatCompactNumber(script.views || 0);
+            const created = script.createdAt ? timeAgo(script.createdAt) : "";
+
+            const badges = [];
+            if (script.verified) badges.push({ label: "Verified", cls: "" });
+            if (script.isUniversal) badges.push({ label: "Universal", cls: "" });
+            if (script.key) badges.push({ label: "Key System", cls: "" });
+            if (script.isPatched) badges.push({ label: "Patched", cls: "patched" });
+
+            return (
+                '<a class="script-card" href="' + url + '" target="_blank" rel="noopener noreferrer">' +
+                    '<div class="script-thumb">' +
+                        (thumb ? '<img src="' + thumb + '" alt="" loading="lazy" onerror="this.remove()">' : "") +
+                    "</div>" +
+                    '<div class="script-body">' +
+                        '<div class="script-title">' + title + "</div>" +
+                        '<div class="script-game">' + gameName + "</div>" +
+                        '<div class="script-stats">' +
+                            '<span class="script-views">👁 ' + views + " views</span>" +
+                            (created ? '<span class="script-time">' + created + "</span>" : "") +
+                        "</div>" +
+                        (badges.length
+                            ? '<div class="script-badges">' +
+                              badges.map(function (b) {
+                                  return '<span class="script-badge ' + b.cls + '">' + b.label + "</span>";
+                              }).join("") +
+                              "</div>"
+                            : "") +
+                    "</div>" +
+                "</a>"
+            );
+        }
+
+        async function loadScriptBloxScripts() {
+            const grid = document.getElementById("scriptsGrid");
+            const controller = new AbortController();
+            const timeoutId = setTimeout(function () {
+                controller.abort();
+            }, 10000);
+
+            try {
+                const res = await fetch(SCRIPTBLOX_API_URL, { signal: controller.signal });
+                clearTimeout(timeoutId);
+
+                if (res.status === 429) {
+                    throw new Error("rate-limited");
                 }
-            }, 100);
-        })();
+
+                if (!res.ok) {
+                    throw new Error("http-" + res.status);
+                }
+
+                const data = await res.json();
+
+                if (data && data.message) {
+                    throw new Error(data.message);
+                }
+
+                const scripts = (data && data.result && data.result.scripts) || [];
+
+                if (!scripts.length) {
+                    grid.innerHTML =
+                        '<div class="scripts-status">No scripts found on this account yet.</div>';
+                    return;
+                }
+
+                grid.innerHTML = scripts.map(renderScriptCard).join("");
+            } catch (err) {
+                clearTimeout(timeoutId);
+
+                const isRateLimited =
+                    (err && err.message === "rate-limited") ||
+                    /rate/i.test((err && err.message) || "");
+                const isAbort = err && err.name === "AbortError";
+
+                const message = isRateLimited || isAbort
+                    ? "ScriptBlox is rate-limiting requests right now."
+                    : "Couldn't load scripts right now.";
+
+                grid.innerHTML =
+                    '<div class="scripts-status">' +
+                        "⚠️ " + message + "<br>" +
+                        '<a href="' + SCRIPTBLOX_PROFILE_URL + '" target="_blank" rel="noopener noreferrer">View scripts on ScriptBlox ↗</a>' +
+                    "</div>";
+            }
+        }
+
+        loadScriptBloxScripts();
     </script>
 
 </body>
