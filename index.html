@@ -24,9 +24,16 @@
             --border: rgba(255, 255, 255, 0.09);
         }
 
+        /* Hide native scrollbar everywhere */
         html {
             width: 100%;
             scroll-behavior: smooth;
+            overflow-y: scroll;
+            scrollbar-width: none; /* Firefox */
+        }
+
+        html::-webkit-scrollbar {
+            display: none; /* Chrome / Safari / Edge */
         }
 
         body {
@@ -35,6 +42,7 @@
             background: #000;
             color: #fff;
             font-family: Arial, Helvetica, sans-serif;
+            overflow-x: hidden;
         }
 
         body::before {
@@ -114,7 +122,36 @@
             );
         }
 
-        /* Main */
+        /* ── Custom Scrollbar ─────────────────────────────────────── */
+
+        #custom-scrollbar {
+            position: fixed;
+            right: 5px;
+            top: 8px;
+            width: 5px;
+            height: calc(100% - 16px);
+            z-index: 9999;
+            pointer-events: none;
+            /* no track */
+        }
+
+        #custom-scrollbar-thumb {
+            position: absolute;
+            left: 0;
+            right: 0;
+            border-radius: 999px;
+            background: rgba(255,255,255,.13);
+            opacity: 0;
+            transition: opacity .3s ease;
+            min-height: 28px;
+        }
+
+        /* fade in only while scrolling */
+        #custom-scrollbar.scrolling #custom-scrollbar-thumb {
+            opacity: 1;
+        }
+
+        /* ── Main ─────────────────────────────────────────────────── */
 
         .container {
             width: min(1200px, calc(100% - 48px));
@@ -330,6 +367,7 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
+            min-width: 0;
         }
 
         .community-title {
@@ -396,6 +434,7 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
+            min-width: 0;
         }
 
         .download-title {
@@ -427,6 +466,7 @@
 
             font-size: 12px;
             font-weight: 700;
+            white-space: nowrap;
 
             transition:
                 background .2s ease,
@@ -438,6 +478,7 @@
             width: 15px;
             height: 15px;
             fill: currentColor;
+            flex-shrink: 0;
         }
 
         .download-button:hover {
@@ -457,9 +498,6 @@
         .section-header {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-
             margin-bottom: 16px;
         }
 
@@ -469,27 +507,6 @@
             letter-spacing: .08em;
             text-transform: uppercase;
             color: #999;
-        }
-
-        .section-link {
-            flex-shrink: 0;
-
-            color: #888;
-            text-decoration: none;
-            font-size: 12px;
-            font-weight: 600;
-
-            padding: 7px 10px;
-            border-radius: 7px;
-
-            transition:
-                color .2s ease,
-                background .2s ease;
-        }
-
-        .section-link:hover {
-            color: #fff;
-            background: rgba(255,255,255,.07);
         }
 
         .scripts-grid {
@@ -658,9 +675,14 @@
             color: #fca5a5;
         }
 
-        /* Mobile */
+        /* ── Mobile ───────────────────────────────────────────────── */
 
         @media (max-width: 800px) {
+            /* Hide custom scrollbar on touch devices — they have their own */
+            #custom-scrollbar {
+                display: none;
+            }
+
             .community-links {
                 grid-template-columns: 1fr;
             }
@@ -705,34 +727,34 @@
             }
 
             .community-card {
-                min-height: 100px;
-                padding: 20px;
-                gap: 16px;
+                min-height: 0;
+                padding: 18px;
+                gap: 14px;
             }
 
             .community-icon {
-                width: 50px;
-                height: 50px;
+                width: 48px;
+                height: 48px;
                 border-radius: 12px;
             }
 
             .discord-card .community-icon svg {
-                width: 28px;
-                height: 28px;
-            }
-
-            .scriptblox-card .community-icon img {
-                width: 31px;
-                height: 31px;
-            }
-
-            .github-card .community-icon svg {
                 width: 26px;
                 height: 26px;
             }
 
+            .scriptblox-card .community-icon img {
+                width: 29px;
+                height: 29px;
+            }
+
+            .github-card .community-icon svg {
+                width: 24px;
+                height: 24px;
+            }
+
             .community-title {
-                font-size: 16px;
+                font-size: 15px;
             }
 
             .community-subtitle {
@@ -745,7 +767,14 @@
             }
 
             .download-box {
-                padding: 20px;
+                padding: 18px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .download-button {
+                width: 100%;
+                justify-content: center;
             }
 
             .scriptblox-scripts {
@@ -756,11 +785,47 @@
                 grid-template-columns: 1fr;
                 gap: 16px;
             }
+
+            /* On small screens: side-by-side thumbnail + info */
+            .script-card {
+                flex-direction: row;
+                align-items: stretch;
+            }
+
+            .script-thumb {
+                width: 110px;
+                min-width: 110px;
+                aspect-ratio: unset;
+                border-bottom: none;
+                border-right: 1px solid rgba(255,255,255,.06);
+            }
+
+            .script-body {
+                padding: 12px 14px;
+                gap: 4px;
+            }
+
+            .script-title {
+                font-size: 13px;
+                -webkit-line-clamp: 3;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .script-thumb {
+                width: 90px;
+                min-width: 90px;
+            }
         }
     </style>
 </head>
 
 <body>
+
+    <!-- Custom scrollbar: track + thumb, floats on the left -->
+    <div id="custom-scrollbar">
+        <div id="custom-scrollbar-thumb"></div>
+    </div>
 
     <div class="floor"></div>
 
@@ -875,14 +940,6 @@
 
             <div class="section-header">
                 <div class="section-title">ScriptBlox Scripts</div>
-                <a
-                    class="section-link"
-                    href="https://scriptblox.com/u/YesDev"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    View Profile ↗
-                </a>
             </div>
 
             <div class="scripts-grid" id="scriptsGrid">
@@ -894,7 +951,48 @@
     </main>
 
     <script>
-        // ScriptBlox scripts preview
+        // ── Custom scrollbar ────────────────────────────────────────
+        (function () {
+            var bar   = document.getElementById("custom-scrollbar");
+            var thumb = document.getElementById("custom-scrollbar-thumb");
+            var scrollingTimer = null;
+
+            function updateThumb() {
+                var scrollTop    = window.scrollY || document.documentElement.scrollTop;
+                var scrollHeight = document.documentElement.scrollHeight;
+                var clientHeight = document.documentElement.clientHeight;
+                var trackHeight  = bar.offsetHeight; // respects top/bottom inset
+
+                // No scrolling needed — hide the whole bar
+                if (scrollHeight <= clientHeight) {
+                    bar.style.display = "none";
+                    return;
+                }
+
+                bar.style.display = "";
+
+                var thumbHeight = Math.max(28, (clientHeight / scrollHeight) * trackHeight);
+                var maxTop      = trackHeight - thumbHeight;
+                var thumbTop    = (scrollTop / (scrollHeight - clientHeight)) * maxTop;
+
+                thumb.style.height = thumbHeight + "px";
+                thumb.style.top    = thumbTop + "px";
+            }
+
+            window.addEventListener("scroll", function () {
+                updateThumb();
+                bar.classList.add("scrolling");
+                clearTimeout(scrollingTimer);
+                scrollingTimer = setTimeout(function () {
+                    bar.classList.remove("scrolling");
+                }, 600);
+            }, { passive: true });
+
+            window.addEventListener("resize", updateThumb, { passive: true });
+            updateThumb();
+        })();
+
+        // ── ScriptBlox scripts preview ──────────────────────────────
         //
         // Pulls every script uploaded by this account straight from
         // ScriptBlox's public API (documented at docs.scriptblox.com) with
