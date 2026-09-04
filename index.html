@@ -24,16 +24,15 @@
             --border: rgba(255, 255, 255, 0.09);
         }
 
-        /* Hide native scrollbar everywhere */
         html {
             width: 100%;
             scroll-behavior: smooth;
             overflow-y: scroll;
-            scrollbar-width: none; /* Firefox */
+            scrollbar-width: none;
         }
 
         html::-webkit-scrollbar {
-            display: none; /* Chrome / Safari / Edge */
+            display: none;
         }
 
         body {
@@ -93,36 +92,14 @@
             z-index: -1;
             opacity: 0.34;
             pointer-events: none;
-
             transform: perspective(500px) rotateX(62deg);
-
             background:
-                linear-gradient(
-                    rgba(255,255,255,.105) 1px,
-                    transparent 1px
-                ),
-                linear-gradient(
-                    90deg,
-                    rgba(255,255,255,.105) 1px,
-                    transparent 1px
-                );
-
+                linear-gradient(rgba(255,255,255,.105) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,.105) 1px, transparent 1px);
             background-size: 80px 80px;
-
-            mask-image: linear-gradient(
-                to top,
-                #000,
-                transparent
-            );
-
-            -webkit-mask-image: linear-gradient(
-                to top,
-                #000,
-                transparent
-            );
+            mask-image: linear-gradient(to top, #000, transparent);
+            -webkit-mask-image: linear-gradient(to top, #000, transparent);
         }
-
-        /* ── Custom Scrollbar ─────────────────────────────────────── */
 
         #custom-scrollbar {
             position: fixed;
@@ -132,7 +109,6 @@
             height: calc(100% - 16px);
             z-index: 9999;
             pointer-events: none;
-            /* no track */
         }
 
         #custom-scrollbar-thumb {
@@ -146,12 +122,9 @@
             min-height: 28px;
         }
 
-        /* fade in only while scrolling */
         #custom-scrollbar.scrolling #custom-scrollbar-thumb {
             opacity: 1;
         }
-
-        /* ── Main ─────────────────────────────────────────────────── */
 
         .container {
             width: min(1200px, calc(100% - 48px));
@@ -167,17 +140,13 @@
 
         .brand h1 {
             display: inline-block;
-
             font-size: clamp(3.5rem, 10vw, 8rem);
             line-height: 1;
             font-weight: 900;
             letter-spacing: .18em;
-
             transform: scaleX(1.12);
             transform-origin: center;
-
             color: #fff;
-
             text-shadow:
                 0 0 5px rgba(255,255,255,.95),
                 0 0 14px rgba(255,255,255,.55),
@@ -189,7 +158,6 @@
             width: 100%;
             height: 1px;
             margin-top: 38px;
-
             background: linear-gradient(
                 90deg,
                 transparent,
@@ -198,16 +166,13 @@
                 rgba(255,255,255,.20) 85%,
                 transparent
             );
-
-            box-shadow:
-                0 0 15px rgba(255,255,255,.07);
+            box-shadow: 0 0 15px rgba(255,255,255,.07);
         }
 
-        /* Community Cards */
+        /* ── Community Cards ─────────────────────────────────────── */
 
         .community-links {
             margin-top: 35px;
-
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 24px;
@@ -215,16 +180,12 @@
 
         .community-card {
             min-height: 112px;
-
             display: flex;
             align-items: center;
             gap: 20px;
-
             padding: 25px 27px;
-
             color: #fff;
             text-decoration: none;
-
             background:
                 linear-gradient(
                     145deg,
@@ -233,13 +194,10 @@
                     rgba(0,0,0,.35)
                 ),
                 #070707;
-
             border-radius: 16px;
-
             box-shadow:
                 inset 0 1px rgba(255,255,255,.025),
                 0 20px 60px rgba(0,0,0,.4);
-
             transition:
                 border-color .25s ease,
                 transform .25s ease,
@@ -257,7 +215,6 @@
 
         .community-card.discord-card:hover {
             border-color: rgba(88, 101, 242, .65);
-
             background:
                 linear-gradient(
                     145deg,
@@ -266,7 +223,6 @@
                     rgba(0,0,0,.35)
                 ),
                 #070707;
-
             box-shadow:
                 inset 0 1px rgba(255,255,255,.035),
                 0 0 20px rgba(88,101,242,.10),
@@ -279,7 +235,6 @@
 
         .community-card.scriptblox-card:hover {
             border-color: rgba(139, 92, 246, .65);
-
             background:
                 linear-gradient(
                     145deg,
@@ -288,7 +243,6 @@
                     rgba(0,0,0,.35)
                 ),
                 #070707;
-
             box-shadow:
                 inset 0 1px rgba(255,255,255,.035),
                 0 0 20px rgba(139,92,246,.10),
@@ -301,7 +255,6 @@
 
         .community-card.github-card:hover {
             border-color: rgba(255, 255, 255, .35);
-
             background:
                 linear-gradient(
                     145deg,
@@ -310,25 +263,41 @@
                     rgba(0,0,0,.35)
                 ),
                 #070707;
-
             box-shadow:
                 inset 0 1px rgba(255,255,255,.035),
                 0 0 20px rgba(255,255,255,.09),
                 0 25px 70px rgba(0,0,0,.5);
         }
 
+        /* Yex card — white accent to match the executor's clean branding */
+        .community-card.yex-card {
+            border: 1px solid rgba(255, 255, 255, .18);
+        }
+
+        .community-card.yex-card:hover {
+            border-color: rgba(255, 255, 255, .42);
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,.08),
+                    rgba(255,255,255,.012) 50%,
+                    rgba(0,0,0,.35)
+                ),
+                #070707;
+            box-shadow:
+                inset 0 1px rgba(255,255,255,.05),
+                0 0 22px rgba(255,255,255,.08),
+                0 25px 70px rgba(0,0,0,.5);
+        }
+
         .community-icon {
             flex-shrink: 0;
-
             width: 58px;
             height: 58px;
-
             display: flex;
             align-items: center;
             justify-content: center;
-
             border-radius: 14px;
-
             background: rgba(0,0,0,.38);
         }
 
@@ -363,6 +332,16 @@
             fill: #fff;
         }
 
+        .yex-card .community-icon {
+            border: 1px solid rgba(255,255,255,.18);
+        }
+
+        .yex-card .community-icon img {
+            width: 36px;
+            height: 36px;
+            object-fit: contain;
+        }
+
         .community-info {
             display: flex;
             flex-direction: column;
@@ -382,114 +361,17 @@
             line-height: 1.5;
         }
 
-        /* Yex Executor + GitHub */
+        /* ── Action row (GitHub only now) ────────────────────────── */
 
         .action-links {
             margin-top: 28px;
-
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-columns: minmax(0, 1fr);
             gap: 24px;
             align-items: stretch;
         }
 
-        .download-box {
-            padding: 24px 26px;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-
-            background:
-                linear-gradient(
-                    145deg,
-                    rgba(255,255,255,.045),
-                    rgba(255,255,255,.012) 50%,
-                    rgba(0,0,0,.35)
-                ),
-                #070707;
-
-            border: 1px solid rgba(255,255,255,.10);
-            border-radius: 16px;
-
-            box-shadow:
-                inset 0 1px rgba(255,255,255,.025),
-                0 20px 60px rgba(0,0,0,.4);
-
-            transition:
-                border-color .25s ease,
-                box-shadow .25s ease;
-        }
-
-        .download-box:hover {
-            border-color: rgba(255,255,255,.17);
-
-            box-shadow:
-                inset 0 1px rgba(255,255,255,.04),
-                0 25px 70px rgba(0,0,0,.5);
-        }
-
-        .download-info {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            min-width: 0;
-        }
-
-        .download-title {
-            font-size: 18px;
-            font-weight: 800;
-            letter-spacing: .01em;
-        }
-
-        .download-subtitle {
-            color: #666;
-            font-size: 12px;
-        }
-
-        .download-button {
-            flex-shrink: 0;
-
-            display: inline-flex;
-            align-items: center;
-            gap: 9px;
-
-            padding: 11px 16px;
-
-            color: #fff;
-            text-decoration: none;
-
-            background: #101010;
-            border: 1px solid rgba(255,255,255,.11);
-            border-radius: 9px;
-
-            font-size: 12px;
-            font-weight: 700;
-            white-space: nowrap;
-
-            transition:
-                background .2s ease,
-                border-color .2s ease,
-                box-shadow .2s ease;
-        }
-
-        .download-button svg {
-            width: 15px;
-            height: 15px;
-            fill: currentColor;
-            flex-shrink: 0;
-        }
-
-        .download-button:hover {
-            background: #181818;
-            border-color: rgba(255,255,255,.24);
-
-            box-shadow:
-                0 0 18px rgba(255,255,255,.07);
-        }
-
-        /* ScriptBlox Scripts */
+        /* ── ScriptBlox Scripts ───────────────────────────────────── */
 
         .scriptblox-scripts {
             margin-top: 28px;
@@ -517,27 +399,18 @@
 
         .scripts-status {
             grid-column: 1 / -1;
-
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 8px;
-
             padding: 34px 20px;
             text-align: center;
-
             color: #666;
             font-size: 12.5px;
             font-weight: 600;
-
             background:
-                linear-gradient(
-                    145deg,
-                    rgba(255,255,255,.03),
-                    rgba(0,0,0,.35)
-                ),
+                linear-gradient(145deg, rgba(255,255,255,.03), rgba(0,0,0,.35)),
                 #070707;
-
             border: 1px solid var(--border);
             border-radius: 16px;
         }
@@ -557,10 +430,8 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-
             color: #fff;
             text-decoration: none;
-
             background:
                 linear-gradient(
                     145deg,
@@ -569,14 +440,11 @@
                     rgba(0,0,0,.4)
                 ),
                 #070707;
-
             border: 1px solid var(--border);
             border-radius: 16px;
-
             box-shadow:
                 inset 0 1px rgba(255,255,255,.025),
                 0 20px 60px rgba(0,0,0,.35);
-
             transition:
                 border-color .25s ease,
                 transform .25s ease,
@@ -586,7 +454,6 @@
         .script-card:hover {
             transform: translateY(-3px);
             border-color: rgba(139,92,246,.5);
-
             box-shadow:
                 inset 0 1px rgba(255,255,255,.04),
                 0 0 20px rgba(139,92,246,.12),
@@ -597,10 +464,8 @@
             position: relative;
             width: 100%;
             aspect-ratio: 16 / 9;
-
             background: linear-gradient(145deg, #0c0c0c, #060606);
             border-bottom: 1px solid rgba(255,255,255,.06);
-
             overflow: hidden;
         }
 
@@ -613,7 +478,6 @@
 
         .script-body {
             padding: 16px 18px 18px;
-
             display: flex;
             flex-direction: column;
             gap: 6px;
@@ -624,7 +488,6 @@
             font-weight: 800;
             letter-spacing: .01em;
             line-height: 1.35;
-
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
@@ -643,7 +506,6 @@
             align-items: center;
             gap: 12px;
             margin-top: 2px;
-
             color: #666;
             font-size: 11px;
             font-weight: 600;
@@ -659,11 +521,9 @@
         .script-badge {
             padding: 3px 8px;
             border-radius: 999px;
-
             background: rgba(139,92,246,.12);
             border: 1px solid rgba(139,92,246,.30);
             color: #c4b5fd;
-
             font-size: 10px;
             font-weight: 700;
             letter-spacing: .02em;
@@ -678,10 +538,7 @@
         /* ── Mobile ───────────────────────────────────────────────── */
 
         @media (max-width: 800px) {
-            /* Hide custom scrollbar on touch devices — they have their own */
-            #custom-scrollbar {
-                display: none;
-            }
+            #custom-scrollbar { display: none; }
 
             .community-links {
                 grid-template-columns: 1fr;
@@ -693,16 +550,6 @@
 
             .scripts-grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-
-            .download-box {
-                align-items: flex-start;
-                flex-direction: column;
-            }
-
-            .download-button {
-                width: 100%;
-                justify-content: center;
             }
         }
 
@@ -717,9 +564,7 @@
                 transform: scaleX(1.05);
             }
 
-            .divider {
-                margin-top: 25px;
-            }
+            .divider { margin-top: 25px; }
 
             .community-links {
                 margin-top: 28px;
@@ -738,55 +583,26 @@
                 border-radius: 12px;
             }
 
-            .discord-card .community-icon svg {
-                width: 26px;
-                height: 26px;
-            }
+            .discord-card .community-icon svg { width: 26px; height: 26px; }
+            .scriptblox-card .community-icon img { width: 29px; height: 29px; }
+            .github-card .community-icon svg { width: 24px; height: 24px; }
+            .yex-card .community-icon img { width: 30px; height: 30px; }
 
-            .scriptblox-card .community-icon img {
-                width: 29px;
-                height: 29px;
-            }
-
-            .github-card .community-icon svg {
-                width: 24px;
-                height: 24px;
-            }
-
-            .community-title {
-                font-size: 15px;
-            }
-
-            .community-subtitle {
-                font-size: 11px;
-            }
+            .community-title { font-size: 15px; }
+            .community-subtitle { font-size: 11px; }
 
             .action-links {
                 margin-top: 22px;
                 gap: 16px;
             }
 
-            .download-box {
-                padding: 18px;
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .download-button {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .scriptblox-scripts {
-                margin-top: 22px;
-            }
+            .scriptblox-scripts { margin-top: 22px; }
 
             .scripts-grid {
                 grid-template-columns: 1fr;
                 gap: 16px;
             }
 
-            /* On small screens: side-by-side thumbnail + info */
             .script-card {
                 flex-direction: row;
                 align-items: stretch;
@@ -822,7 +638,6 @@
 
 <body>
 
-    <!-- Custom scrollbar: track + thumb, floats on the left -->
     <div id="custom-scrollbar">
         <div id="custom-scrollbar-thumb"></div>
     </div>
@@ -837,12 +652,11 @@
 
         <div class="divider"></div>
 
-        <!-- Community -->
+        <!-- Community + Yex row -->
 
         <section class="community-links">
 
-            <!-- Discord Community -->
-
+            <!-- Discord -->
             <a
                 class="community-card discord-card"
                 href="https://discord.gg/P2DFbPX3Qh"
@@ -854,17 +668,13 @@
                         <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.211.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.95 19.95 0 0 0 5.993 3.03.078.078 0 0 0 .084-.027c.461-.63.873-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.17 13.17 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .077-.01c3.928 1.794 8.18 1.794 12.061 0a.074.074 0 0 1 .078.009c.12.099.246.198.373.292a.077.077 0 0 1-.006.127c-.598.345-1.22.64-1.873.893a.077.077 0 0 0-.04.107c.36.698.771 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.91 19.91 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177.838-9.674-3.549-13.66a.061.061 0 0 0-.032-.029ZM8.02 15.33c-1.183 0-2.157-1.086-2.157-2.419 0-1.333.956-2.42 2.157-2.42 1.21 0 2.166 1.097 2.157 2.42 0 1.333-.956 2.419-2.157 2.419Zm7.974 0c-1.183 0-2.157-1.086-2.157-2.419 0-1.333.956-2.42 2.157-2.42 1.21 0 2.166 1.097 2.157 2.42 0 1.333-.956 2.419-2.157 2.419Z"/>
                     </svg>
                 </div>
-
                 <div class="community-info">
                     <div class="community-title">YesHub Community</div>
-                    <div class="community-subtitle">
-                        Join the official YesHub Discord community
-                    </div>
+                    <div class="community-subtitle">Join the official YesHub Discord community</div>
                 </div>
             </a>
 
             <!-- ScriptBlox -->
-
             <a
                 class="community-card scriptblox-card"
                 href="https://scriptblox.com/u/YesDev"
@@ -874,44 +684,27 @@
                 <div class="community-icon">
                     <img src="./assets/ScriptBlox.png" alt="ScriptBlox">
                 </div>
-
                 <div class="community-info">
                     <div class="community-title">ScriptBlox</div>
-                    <div class="community-subtitle">
-                        Scripts &amp; projects by yes.dev
-                    </div>
+                    <div class="community-subtitle">Scripts &amp; projects by yes.dev</div>
                 </div>
             </a>
 
-        </section>
-
-        <!-- Yex Executor + GitHub -->
-
-        <section class="action-links">
-
-            <div class="download-box">
-
-                <div class="download-info">
-                    <div class="download-title">Yex Executor</div>
-                    <div class="download-subtitle">
-                        Download the latest version of Yex Executor
-                    </div>
+            <!-- Yex Executor -->
+            <a
+                class="community-card yex-card"
+                href="/yex"
+            >
+                <div class="community-icon">
+                    <img src="./assets/Yex.png" alt="Yex Executor">
                 </div>
+                <div class="community-info">
+                    <div class="community-title">Yex Executor</div>
+                    <div class="community-subtitle">Download the latest version of Yex Executor</div>
+                </div>
+            </a>
 
-                <a
-                    class="download-button"
-                    href="https://gofile.io/d/UFWYg3Sn"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <svg viewBox="0 0 24 24">
-                        <path d="M19 9h-4V3H9v6H5l7 7 7-7zm-14 9v2h14v-2H5z"/>
-                    </svg>
-                    Download
-                </a>
-
-            </div>
-
+            <!-- GitHub -->
             <a
                 class="community-card github-card"
                 href="https://github.com/yesd3v"
@@ -923,12 +716,9 @@
                         <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55v-2.16c-3.2.7-3.87-1.54-3.87-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.25 3.34.95.1-.74.4-1.25.73-1.54-2.55-.29-5.23-1.28-5.23-5.69 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.47.11-3.06 0 0 .96-.31 3.15 1.18a10.9 10.9 0 0 1 5.74 0c2.19-1.49 3.15-1.18 3.15-1.18.62 1.59.23 2.77.11 3.06.73.81 1.18 1.84 1.18 3.1 0 4.42-2.69 5.39-5.25 5.68.41.35.78 1.04.78 2.1v3.11c0 .3.21.66.79.55A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/>
                     </svg>
                 </div>
-
                 <div class="community-info">
                     <div class="community-title">GitHub</div>
-                    <div class="community-subtitle">
-                        YesD3v - source &amp; repos
-                    </div>
+                    <div class="community-subtitle">YesD3v — source &amp; repos</div>
                 </div>
             </a>
 
@@ -961,9 +751,8 @@
                 var scrollTop    = window.scrollY || document.documentElement.scrollTop;
                 var scrollHeight = document.documentElement.scrollHeight;
                 var clientHeight = document.documentElement.clientHeight;
-                var trackHeight  = bar.offsetHeight; // respects top/bottom inset
+                var trackHeight  = bar.offsetHeight;
 
-                // No scrolling needed — hide the whole bar
                 if (scrollHeight <= clientHeight) {
                     bar.style.display = "none";
                     return;
@@ -992,14 +781,7 @@
             updateThumb();
         })();
 
-        // ── ScriptBlox scripts preview ──────────────────────────────
-        //
-        // Pulls every script uploaded by this account straight from
-        // ScriptBlox's public API (documented at docs.scriptblox.com) with
-        // a plain client-side fetch - no key or backend needed. If the
-        // request gets rate limited, blocked by CORS, or otherwise fails,
-        // we fall back to a small inline notice with a link to the live
-        // profile instead of leaving a blank section.
+        // ── ScriptBlox scripts ──────────────────────────────────────
 
         const SCRIPTBLOX_OWNER = "YesDev";
         const SCRIPTBLOX_PROFILE_URL = "https://scriptblox.com/u/YesDev";
@@ -1010,31 +792,21 @@
 
         function formatCompactNumber(n) {
             if (typeof n !== "number" || isNaN(n)) return "0";
-            return new Intl.NumberFormat("en", {
-                notation: "compact",
-                maximumFractionDigits: 1,
-            }).format(n);
+            return new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 }).format(n);
         }
 
         function timeAgo(dateStr) {
             const date = new Date(dateStr);
             if (isNaN(date.getTime())) return "";
-
             const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
             const units = [
-                ["year", 31536000],
-                ["month", 2592000],
-                ["week", 604800],
-                ["day", 86400],
-                ["hour", 3600],
-                ["minute", 60],
+                ["year", 31536000], ["month", 2592000], ["week", 604800],
+                ["day", 86400], ["hour", 3600], ["minute", 60],
             ];
-
             for (const [name, secs] of units) {
                 const count = Math.floor(seconds / secs);
                 if (count >= 1) return count + " " + name + (count > 1 ? "s" : "") + " ago";
             }
-
             return "just now";
         }
 
@@ -1052,18 +824,18 @@
         }
 
         function renderScriptCard(script) {
-            const title = escapeHTML(script.title || "Untitled script");
+            const title    = escapeHTML(script.title || "Untitled script");
             const gameName = escapeHTML((script.game && script.game.name) || "Universal");
-            const thumb = resolveImage(script.image, script.game && script.game.imageUrl);
-            const url = "https://scriptblox.com/script/" + encodeURIComponent(script.slug || "");
-            const views = formatCompactNumber(script.views || 0);
-            const created = script.createdAt ? timeAgo(script.createdAt) : "";
+            const thumb    = resolveImage(script.image, script.game && script.game.imageUrl);
+            const url      = "https://scriptblox.com/script/" + encodeURIComponent(script.slug || "");
+            const views    = formatCompactNumber(script.views || 0);
+            const created  = script.createdAt ? timeAgo(script.createdAt) : "";
 
             const badges = [];
-            if (script.verified) badges.push({ label: "Verified", cls: "" });
+            if (script.verified)    badges.push({ label: "Verified", cls: "" });
             if (script.isUniversal) badges.push({ label: "Universal", cls: "" });
-            if (script.key) badges.push({ label: "Key System", cls: "" });
-            if (script.isPatched) badges.push({ label: "Patched", cls: "patched" });
+            if (script.key)         badges.push({ label: "Key System", cls: "" });
+            if (script.isPatched)   badges.push({ label: "Patched", cls: "patched" });
 
             return (
                 '<a class="script-card" href="' + url + '" target="_blank" rel="noopener noreferrer">' +
@@ -1074,14 +846,12 @@
                         '<div class="script-title">' + title + "</div>" +
                         '<div class="script-game">' + gameName + "</div>" +
                         '<div class="script-stats">' +
-                            '<span class="script-views">👁 ' + views + " views</span>" +
-                            (created ? '<span class="script-time">' + created + "</span>" : "") +
+                            '<span>👁 ' + views + " views</span>" +
+                            (created ? '<span>' + created + "</span>" : "") +
                         "</div>" +
                         (badges.length
                             ? '<div class="script-badges">' +
-                              badges.map(function (b) {
-                                  return '<span class="script-badge ' + b.cls + '">' + b.label + "</span>";
-                              }).join("") +
+                              badges.map(b => '<span class="script-badge ' + b.cls + '">' + b.label + "</span>").join("") +
                               "</div>"
                             : "") +
                     "</div>" +
@@ -1092,33 +862,22 @@
         async function loadScriptBloxScripts() {
             const grid = document.getElementById("scriptsGrid");
             const controller = new AbortController();
-            const timeoutId = setTimeout(function () {
-                controller.abort();
-            }, 10000);
+            const timeoutId = setTimeout(() => controller.abort(), 10000);
 
             try {
                 const res = await fetch(SCRIPTBLOX_API_URL, { signal: controller.signal });
                 clearTimeout(timeoutId);
 
-                if (res.status === 429) {
-                    throw new Error("rate-limited");
-                }
-
-                if (!res.ok) {
-                    throw new Error("http-" + res.status);
-                }
+                if (res.status === 429) throw new Error("rate-limited");
+                if (!res.ok) throw new Error("http-" + res.status);
 
                 const data = await res.json();
-
-                if (data && data.message) {
-                    throw new Error(data.message);
-                }
+                if (data && data.message) throw new Error(data.message);
 
                 const scripts = (data && data.result && data.result.scripts) || [];
 
                 if (!scripts.length) {
-                    grid.innerHTML =
-                        '<div class="scripts-status">No scripts found on this account yet.</div>';
+                    grid.innerHTML = '<div class="scripts-status">No scripts found on this account yet.</div>';
                     return;
                 }
 
@@ -1126,9 +885,7 @@
             } catch (err) {
                 clearTimeout(timeoutId);
 
-                const isRateLimited =
-                    (err && err.message === "rate-limited") ||
-                    /rate/i.test((err && err.message) || "");
+                const isRateLimited = (err && err.message === "rate-limited") || /rate/i.test((err && err.message) || "");
                 const isAbort = err && err.name === "AbortError";
 
                 const message = isRateLimited || isAbort
@@ -1136,9 +893,8 @@
                     : "Couldn't load scripts right now.";
 
                 grid.innerHTML =
-                    '<div class="scripts-status">' +
-                        "⚠️ " + message + "<br>" +
-                        '<a href="' + SCRIPTBLOX_PROFILE_URL + '" target="_blank" rel="noopener noreferrer">View scripts on ScriptBlox ↗</a>' +
+                    '<div class="scripts-status">⚠️ ' + message + "<br>" +
+                    '<a href="' + SCRIPTBLOX_PROFILE_URL + '" target="_blank" rel="noopener noreferrer">View scripts on ScriptBlox ↗</a>' +
                     "</div>";
             }
         }
