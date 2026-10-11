@@ -286,12 +286,14 @@
                 0 25px 70px rgba(0,0,0,.5);
         }
 
-        /* Yex card — white accent to match the executor's clean branding */
-        .community-card.yex-card {
+        /* Yex & Yesify cards — white accent to match clean branding */
+        .community-card.yex-card,
+        .community-card.yesify-card {
             border: 1px solid rgba(255, 255, 255, .18);
         }
 
-        .community-card.yex-card:hover {
+        .community-card.yex-card:hover,
+        .community-card.yesify-card:hover {
             border-color: rgba(255, 255, 255, .42);
             background:
                 linear-gradient(
@@ -349,11 +351,13 @@
             fill: #fff;
         }
 
-        .yex-card .community-icon {
+        .yex-card .community-icon,
+        .yesify-card .community-icon {
             border: 1px solid rgba(255,255,255,.18);
         }
 
-        .yex-card .community-icon img {
+        .yex-card .community-icon img,
+        .yesify-card .community-icon img {
             width: 36px;
             height: 36px;
             object-fit: contain;
@@ -603,7 +607,8 @@
             .discord-card .community-icon svg { width: 26px; height: 26px; }
             .scriptblox-card .community-icon img { width: 29px; height: 29px; }
             .github-card .community-icon svg { width: 24px; height: 24px; }
-            .yex-card .community-icon img { width: 30px; height: 30px; }
+            .yex-card .community-icon img,
+            .yesify-card .community-icon img { width: 30px; height: 30px; }
 
             .community-title { font-size: 15px; }
             .community-subtitle { font-size: 11px; }
@@ -718,6 +723,20 @@
                 <div class="community-info">
                     <div class="community-title">Yex Executor</div>
                     <div class="community-subtitle">Download the latest version of Yex Executor</div>
+                </div>
+            </a>
+
+            <!-- Yesify Extension -->
+            <a
+                class="community-card yesify-card"
+                href="/yesify"
+            >
+                <div class="community-icon">
+                    <img src="./assets/Yesify.png" alt="Yesify">
+                </div>
+                <div class="community-info">
+                    <div class="community-title">Yesify</div>
+                    <div class="community-subtitle">Spotify ad blocker &amp; unlocked mini player</div>
                 </div>
             </a>
 
