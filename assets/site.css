@@ -92,9 +92,30 @@ img {
     overflow: hidden;
 }
 
+.bg-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: .3;
+}
+
+/* Vignette keeps the contour lines away from text-heavy areas */
+.bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background:
+        radial-gradient(ellipse 75% 65% at 50% 40%, transparent 20%, rgba(3, 3, 3, .8) 100%),
+        linear-gradient(to bottom, rgba(3, 3, 3, 0) 40%, rgba(3, 3, 3, .55));
+}
+
 .bg::before {
     content: "";
     position: absolute;
+    z-index: 1;
     inset: -20% -10% auto;
     height: 80%;
     background:
@@ -104,26 +125,10 @@ img {
     animation: drift 18s var(--ease) infinite alternate;
 }
 
-.bg-grid {
-    position: absolute;
-    left: -10%;
-    right: -10%;
-    bottom: -30%;
-    height: 70%;
-    opacity: .4;
-    transform: perspective(520px) rotateX(62deg);
-    background:
-        linear-gradient(rgba(255, 255, 255, .09) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, .09) 1px, transparent 1px);
-    background-size: 72px 72px;
-    mask-image: linear-gradient(to top, #000 10%, transparent 85%);
-    -webkit-mask-image: linear-gradient(to top, #000 10%, transparent 85%);
-    animation: grid-scroll 6s linear infinite;
-}
-
 .bg-noise {
     position: absolute;
     inset: 0;
+    z-index: 3;
     opacity: .05;
     mix-blend-mode: overlay;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
@@ -132,11 +137,6 @@ img {
 @keyframes drift {
     from { transform: translate3d(-2%, 0, 0) scale(1); }
     to   { transform: translate3d(2%, 2%, 0) scale(1.06); }
-}
-
-@keyframes grid-scroll {
-    from { background-position: 0 0, 0 0; }
-    to   { background-position: 0 72px, 0 0; }
 }
 
 /* ── Custom scrollbar ───────────────────────────────────────────── */
@@ -227,13 +227,21 @@ img {
 }
 
 .wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: 14px;
-    letter-spacing: .22em;
+    font-size: 17px;
+    letter-spacing: -.03em;
     color: var(--text-2);
     text-decoration: none;
     transition: color .2s ease, text-shadow .2s ease;
+}
+
+.wordmark img {
+    width: 20px;
+    height: 20px;
 }
 
 .wordmark:hover {

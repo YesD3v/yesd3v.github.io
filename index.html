@@ -45,43 +45,73 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 6px 14px 6px 8px;
+            padding: 6px 14px;
             font-size: 12.5px;
             font-weight: 600;
             color: var(--text-2);
             border: 1px solid var(--border);
             border-radius: 999px;
-            background: rgba(255,255,255,.03);
+            background: rgba(10,10,11,.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
 
-        .hero-badge img {
-            width: 20px;
-            height: 20px;
-            border-radius: 6px;
+        .hero-badge::before {
+            content: "";
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 0 8px rgba(255,255,255,.8);
         }
+
+        /* Wordmark: hex logo + gradient "YesHub" with a slow shine */
 
         .hero h1 {
-            margin-top: 28px;
+            margin-top: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .22em;
             font-family: var(--font-display);
-            font-size: clamp(3.4rem, 11vw, 8.5rem);
+            font-size: clamp(3.6rem, 10vw, 7.5rem);
             line-height: 1;
             font-weight: 700;
-            letter-spacing: .16em;
-            padding-left: .16em;
-            transform: scaleX(1.08);
-            color: #fff;
-            text-shadow:
-                0 0 5px rgba(255,255,255,.9),
-                0 0 16px rgba(255,255,255,.5),
-                0 0 36px rgba(255,255,255,.25),
-                0 0 80px rgba(255,255,255,.12);
-            animation: flicker 7s linear infinite;
+            letter-spacing: -.045em;
         }
 
-        @keyframes flicker {
-            0%, 92%, 96%, 100% { opacity: 1; }
-            93%                { opacity: .82; }
-            95%                { opacity: .94; }
+        .hero-logo {
+            width: .82em;
+            height: .82em;
+            filter:
+                drop-shadow(0 0 10px rgba(255,255,255,.35))
+                drop-shadow(0 0 30px rgba(255,255,255,.15));
+            animation: logo-spin 24s linear infinite;
+        }
+
+        @keyframes logo-spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .hero-word {
+            padding: 0 .04em .08em 0;
+            background:
+                linear-gradient(110deg, transparent 38%, rgba(255,255,255,.95) 50%, transparent 62%),
+                linear-gradient(180deg, #fff 25%, #9a9a9f 110%);
+            background-size: 250% 100%, 100% 100%;
+            background-repeat: no-repeat;
+            background-position: 150% 0, 0 0;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            filter: drop-shadow(0 0 24px rgba(255,255,255,.18));
+            animation: shine 7s var(--ease) 1.2s infinite;
+        }
+
+        @keyframes shine {
+            0%      { background-position: 150% 0, 0 0; }
+            35%,
+            100%    { background-position: -50% 0, 0 0; }
         }
 
         .hero p {
@@ -530,11 +560,7 @@
         @media (max-width: 600px) {
             .hero { padding: 56px 0 44px; }
 
-            .hero h1 {
-                letter-spacing: .1em;
-                padding-left: .1em;
-                transform: scaleX(1.04);
-            }
+            .hero h1 { font-size: clamp(3rem, 15vw, 4.2rem); }
 
             .hero p { font-size: 15.5px; }
 
@@ -593,7 +619,9 @@
 <body>
 
     <div class="bg" aria-hidden="true">
-        <div class="bg-grid"></div>
+        <video class="bg-video" autoplay muted loop playsinline preload="auto" poster="/assets/topography-poster.jpg">
+            <source src="/assets/topography-loop.mp4" type="video/mp4">
+        </video>
         <div class="bg-noise"></div>
     </div>
 
@@ -614,11 +642,13 @@
         <!-- Hero -->
         <header class="hero">
             <div class="hero-badge reveal" style="--i:0">
-                <img src="/assets/YesHub.png" alt="">
                 Scripts, tools &amp; executors by yes.dev
             </div>
 
-            <h1 class="reveal" style="--i:1">YESHUB</h1>
+            <h1 class="reveal" style="--i:1" aria-label="YesHub">
+                <img class="hero-logo" src="/assets/YesHub.png" alt="">
+                <span class="hero-word">YesHub</span>
+            </h1>
 
             <p class="reveal" style="--i:2">Free apps, extensions and Roblox scripts &mdash; built and maintained by yes.dev.</p>
 

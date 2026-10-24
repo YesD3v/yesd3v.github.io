@@ -43,6 +43,17 @@
     updateThumb();
 })();
 
+// Background video: keep it still for reduced-motion users
+(function () {
+    var video = document.querySelector(".bg-video");
+    if (!video) return;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        video.removeAttribute("autoplay");
+        video.pause();
+    }
+})();
+
 // Footer year
 (function () {
     var el = document.getElementById("year");
