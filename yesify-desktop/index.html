@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Yesify Desktop - Free Native Music Player for Windows</title>
+
+    <link rel="icon" type="image/png" href="/assets/Yesify-Desktop.png">
+    <link rel="shortcut icon" type="image/png" href="/assets/Yesify-Desktop.png">
+
+    <!-- Discord / OG embed -->
+    <meta property="og:type"        content="website">
+    <meta property="og:url"         content="https://yesd3v.github.io/yesify-desktop">
+    <meta property="og:title"       content="Yesify Desktop - Free Native Music Player for Windows">
+    <meta property="og:description" content="Download Yesify Desktop by yes.dev&#10;Paste a Spotify link and play. No account, no Premium, no ads, unlimited skips.">
+    <meta property="og:image"       content="https://yesd3v.github.io/assets/Yesify-Desktop.png">
+    <meta property="og:image:width"  content="256">
+    <meta property="og:image:height" content="256">
+
+    <!-- Twitter card -->
+    <meta name="twitter:card"        content="summary">
+    <meta name="twitter:title"       content="Yesify Desktop - Free Native Music Player for Windows">
+    <meta name="twitter:description" content="Download Yesify Desktop by yes.dev. Paste a Spotify link and play. No account, no ads, unlimited skips.">
+    <meta name="twitter:image"       content="https://yesd3v.github.io/assets/Yesify-Desktop.png">
+
+    <!-- Plain meta description -->
+    <meta name="description" content="Download Yesify Desktop by yes.dev: a free, open-source, native Windows music player. Paste a Spotify link and play. No account, no Premium, no ads, unlimited skips.">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            width: 100%;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+        }
+
+        html::-webkit-scrollbar {
+            display: none;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            background: #000;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, "Inter", sans-serif;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -3;
+            background:
+                radial-gradient(
+                    circle at 50% -10%,
+                    rgba(255, 255, 255, 0.055),
+                    transparent 38%
+                ),
+                #000;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            pointer-events: none;
+            opacity: 0.38;
+            background:
+                linear-gradient(135deg, transparent 47%, rgba(255,255,255,.025) 49%, transparent 51%),
+                linear-gradient(45deg,  transparent 47%, rgba(255,255,255,.018) 49%, transparent 51%);
+            background-size: 130px 130px;
+            transform: perspective(800px) rotateX(55deg) scale(1.7);
+            transform-origin: center bottom;
+        }
+
+        .floor {
+            position: fixed;
+            left: -10%;
+            right: -10%;
+            bottom: -35%;
+            height: 75%;
+            z-index: -1;
+            opacity: 0.34;
+            pointer-events: none;
+            transform: perspective(500px) rotateX(62deg);
+            background:
+                linear-gradient(rgba(255,255,255,.105) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,.105) 1px, transparent 1px);
+            background-size: 80px 80px;
+            mask-image: linear-gradient(to top, #000, transparent);
+            -webkit-mask-image: linear-gradient(to top, #000, transparent);
+        }
+
+        /* ── Back button ─────────────────────────────────────────── */
+
+        .back {
+            position: fixed;
+            top: 24px;
+            left: 28px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255,255,255,.5);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: .04em;
+            transition: color .2s ease;
+            z-index: 10;
+        }
+
+        .back:hover {
+            color: rgba(255,255,255,.9);
+        }
+
+        .back svg {
+            width: 16px;
+            height: 16px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            flex-shrink: 0;
+        }
+
+        /* ── Center card ─────────────────────────────────────────── */
+
+        .card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 28px;
+            padding: 52px 64px;
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,.045),
+                    rgba(255,255,255,.012) 50%,
+                    rgba(0,0,0,.35)
+                ),
+                #070707;
+            border: 1px solid rgba(255,255,255,.10);
+            border-radius: 24px;
+            box-shadow:
+                inset 0 1px rgba(255,255,255,.03),
+                0 30px 80px rgba(0,0,0,.55);
+            text-align: center;
+            max-width: 540px;
+            width: 100%;
+        }
+
+        /* ── Logo ────────────────────────────────────────────────── */
+
+        .logo-wrap {
+            width: 96px;
+            height: 96px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 22px;
+            background: rgba(0,0,0,.45);
+            border: 1px solid rgba(255,255,255,.10);
+            box-shadow: 0 12px 30px rgba(0,0,0,.6);
+        }
+
+        .logo-wrap img {
+            width: 64px;
+            height: 64px;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+
+        /* ── Text ────────────────────────────────────────────────── */
+
+        .card-title {
+            font-size: 32px;
+            font-weight: 900;
+            letter-spacing: .02em;
+            line-height: 1.1;
+            color: #fff;
+            text-shadow:
+                0 0 6px rgba(255,255,255,.5),
+                0 0 20px rgba(255,255,255,.18);
+        }
+
+        .card-sub {
+            margin-top: 8px;
+            font-size: 13.5px;
+            color: rgba(255,255,255,.45);
+            font-weight: 600;
+            letter-spacing: .02em;
+        }
+
+        /* ── Download counter ────────────────────────────────────── */
+
+        .dl-counter {
+            position: absolute;
+            top: 20px;
+            left: 22px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            color: rgba(255,255,255,.32);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: .04em;
+            user-select: none;
+        }
+
+        .dl-counter svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+            flex-shrink: 0;
+        }
+
+        /* ── Download button ─────────────────────────────────────── */
+
+        .dl-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 36px;
+            color: #000;
+            text-decoration: none;
+            background: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 14.5px;
+            font-weight: 800;
+            letter-spacing: .03em;
+            cursor: pointer;
+            transition:
+                background .2s ease,
+                box-shadow .2s ease,
+                transform .15s ease;
+            box-shadow: 0 0 28px rgba(255,255,255,.18);
+        }
+
+        .dl-btn:hover {
+            background: #e8e8e8;
+            box-shadow: 0 0 40px rgba(255,255,255,.28);
+            transform: translateY(-2px);
+        }
+
+        .dl-btn:active {
+            transform: translateY(0);
+        }
+
+        .dl-btn svg {
+            width: 17px;
+            height: 17px;
+            fill: currentColor;
+            flex-shrink: 0;
+        }
+
+        /* ── Version / meta ──────────────────────────────────────── */
+
+        .meta {
+            font-size: 11.5px;
+            color: rgba(255,255,255,.35);
+            font-weight: 600;
+            letter-spacing: .04em;
+        }
+
+        /* ── Features List ───────────────────────────────────────── */
+
+        .features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            width: 100%;
+            margin-top: 4px;
+            text-align: left;
+        }
+
+        .feature-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .feature-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: .01em;
+        }
+
+        .feature-desc {
+            font-size: 10.5px;
+            color: rgba(255, 255, 255, 0.4);
+            line-height: 1.3;
+        }
+
+        /* ── Installation Guide ──────────────────────────────────── */
+
+        .install-guide {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            padding: 16px 18px;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .install-title {
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .install-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.65);
+            line-height: 1.4;
+        }
+
+        .step-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 9px;
+        }
+
+        .step-num {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 800;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .step-code {
+            font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 1px 5px;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 11px;
+        }
+
+        /* ── Mobile ──────────────────────────────────────────────── */
+
+        @media (max-width: 540px) {
+            .card {
+                padding: 40px 24px;
+                gap: 24px;
+                border-radius: 20px;
+            }
+
+            .card-title { font-size: 26px; }
+
+            .logo-wrap {
+                width: 80px;
+                height: 80px;
+                border-radius: 18px;
+            }
+
+            .logo-wrap img {
+                width: 50px;
+                height: 50px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="floor"></div>
+
+    <!-- Back -->
+    <a class="back" href="/">
+        <svg viewBox="0 0 24 24">
+            <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        Back
+    </a>
+
+    <!-- Card -->
+    <div class="card">
+
+        <div class="dl-counter" id="dlCounter">
+            <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zm-14 9v2h14v-2H5z"/></svg>
+            <span id="dlCount">-</span>
+        </div>
+
+        <div class="logo-wrap">
+            <img src="/assets/Yesify-Desktop.png" alt="Yesify Desktop">
+        </div>
+
+        <div>
+            <div class="card-title">Yesify Desktop</div>
+            <div class="card-sub">Native Music Player for Windows</div>
+        </div>
+
+        <a
+            class="dl-btn"
+            id="downloadBtn"
+            href="https://github.com/YesD3v/Yesify-Desktop-App/releases/download/Built/Yesify.exe"
+        >
+            <svg viewBox="0 0 24 24">
+                <path d="M19 9h-4V3H9v6H5l7 7 7-7zm-14 9v2h14v-2H5z"/>
+            </svg>
+            Download for Windows
+        </a>
+
+        <div class="meta">Yesify.exe &bull; 162 MB &bull; Windows 10 / 11 (64-bit) &bull; <a href="https://github.com/YesD3v/Yesify-Desktop-App" style="color: inherit;">Open source</a></div>
+
+        <!-- Features -->
+        <div class="features">
+            <div class="feature-item">
+                <span class="feature-title">No Account, No Ads</span>
+                <span class="feature-desc">Paste a public Spotify or YouTube link and play. Unlimited skips.</span>
+            </div>
+            <div class="feature-item">
+                <span class="feature-title">Synced Lyrics</span>
+                <span class="feature-desc">Word-by-word, Apple Music style. Click a line to jump to it.</span>
+            </div>
+            <div class="feature-item">
+                <span class="feature-title">Your Library</span>
+                <span class="feature-desc">Liked Songs, your own playlists with covers, and search.</span>
+            </div>
+            <div class="feature-item">
+                <span class="feature-title">Glass or Lightweight</span>
+                <span class="feature-desc">Frosted glass over the artwork, or a flat look that uses ~7 MB.</span>
+            </div>
+            <div class="feature-item">
+                <span class="feature-title">Always-On-Top Mini Player</span>
+                <span class="feature-desc">Freely resizable, colored from the album cover.</span>
+            </div>
+            <div class="feature-item">
+                <span class="feature-title">Discord &amp; Media Keys</span>
+                <span class="feature-desc">Rich Presence, the Windows media flyout and media keys.</span>
+            </div>
+        </div>
+
+        <!-- Install Guide -->
+        <div class="install-guide">
+            <span class="install-title">Quick Start</span>
+            <div class="install-steps">
+                <div class="step-row">
+                    <span class="step-num">1</span>
+                    <span>Download <span class="step-code">Yesify.exe</span> and run it. No installer, no setup.</span>
+                </div>
+                <div class="step-row">
+                    <span class="step-num">2</span>
+                    <span>If Windows SmartScreen appears, click <b>More info</b> then <b>Run anyway</b>.</span>
+                </div>
+                <div class="step-row">
+                    <span class="step-num">3</span>
+                    <span>Click <b>Import Playlist</b> and paste a Spotify playlist, album or song link.</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        (async function () {
+            try {
+                const res = await fetch(
+                    "https://api.github.com/repos/YesD3v/Yesify-Desktop-App/releases",
+                    { headers: { Accept: "application/vnd.github+json" } }
+                );
+                if (!res.ok) throw new Error();
+                const releases = await res.json();
+                let totalDownloads = 0;
+                for (const rel of releases) {
+                    for (const asset of (rel.assets || [])) {
+                        if (asset.name.toLowerCase().endsWith(".exe")) {
+                            totalDownloads += asset.download_count;
+                        }
+                    }
+                }
+                document.getElementById("dlCount").textContent =
+                    new Intl.NumberFormat("en").format(totalDownloads);
+            } catch {
+                document.getElementById("dlCounter").style.display = "none";
+            }
+        })();
+    </script>
+
+</body>
+</html>
