@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#030303">
+    <meta name="theme-color" content="#2a0a14">
 
     <title>Yesify Desktop - Free Native Music Player for Windows</title>
 
@@ -14,7 +14,7 @@
     <meta property="og:type"        content="website">
     <meta property="og:url"         content="https://yesd3v.github.io/yesify-desktop">
     <meta property="og:title"       content="Yesify Desktop - Free Native Music Player for Windows">
-    <meta property="og:description" content="Download Yesify Desktop by yes.dev&#10;Paste a Spotify link and play. No account, no Premium, no ads, unlimited skips.">
+    <meta property="og:description" content="Download Yesify Desktop by yes.dev&#10;All of YouTube Music and your Spotify playlists, in a native glass player. No account, no Premium, no ads, unlimited skips.">
     <meta property="og:image"       content="https://yesd3v.github.io/assets/Yesify-Desktop.png">
     <meta property="og:image:width"  content="256">
     <meta property="og:image:height" content="256">
@@ -22,145 +22,714 @@
     <!-- Twitter card -->
     <meta name="twitter:card"        content="summary">
     <meta name="twitter:title"       content="Yesify Desktop - Free Native Music Player for Windows">
-    <meta name="twitter:description" content="Download Yesify Desktop by yes.dev. Paste a Spotify link and play. No account, no ads, unlimited skips.">
+    <meta name="twitter:description" content="Download Yesify Desktop by yes.dev. All of YouTube Music and your Spotify playlists. No account, no ads, unlimited skips.">
     <meta name="twitter:image"       content="https://yesd3v.github.io/assets/Yesify-Desktop.png">
 
-    <!-- Plain meta description -->
-    <meta name="description" content="Download Yesify Desktop by yes.dev: a free, open-source, native Windows music player. Paste a Spotify link and play. No account, no Premium, no ads, unlimited skips.">
+    <meta name="description" content="Download Yesify Desktop by yes.dev: a free, open-source, native Windows music player. Browse all of YouTube Music, play your Spotify playlists, synced lyrics. No account, no Premium, no ads, unlimited skips.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@500&display=swap">
-    <link rel="stylesheet" href="/assets/site.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+
+    <style>
+        /* The app's own look: a blurred, vivid version of the artwork behind everything, frosted glass
+           panels on top, white accents and translucent white text. */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --text: #fff;
+            --subtle: rgba(255, 255, 255, .70);
+            --faint: rgba(255, 255, 255, .50);
+            --glass: rgba(16, 16, 22, .35);
+            --glass-strong: rgba(16, 16, 22, .55);
+            --raised: rgba(255, 255, 255, .12);
+            --hover: rgba(255, 255, 255, .18);
+            --border: rgba(255, 255, 255, .14);
+            --border-strong: rgba(255, 255, 255, .28);
+            --radius: 14px;
+            --ease: cubic-bezier(.2, .7, .2, 1);
+            --font: "Segoe UI Variable Display", "Segoe UI Variable Text", "Segoe UI", Inter, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            /* backdrop palette (changes like the artwork of a new song) */
+            --a: #c0123a;
+            --b: #5b0f3f;
+            --c: #2a1260;
+            color-scheme: dark;
+        }
+
+        html { scroll-behavior: smooth; overflow-y: scroll; scrollbar-width: none; -webkit-text-size-adjust: 100%; }
+        html::-webkit-scrollbar { display: none; }
+
+        body {
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            background: #12060c;
+            color: var(--text);
+            font-family: var(--font);
+            font-size: 15px;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        [hidden] { display: none !important; }
+        ::selection { background: rgba(255, 255, 255, .9); color: #000; }
+        a { color: inherit; }
+        img { display: block; max-width: 100%; }
+        :focus-visible { outline: 2px solid rgba(255, 255, 255, .85); outline-offset: 3px; border-radius: 8px; }
+
+        .icon { width: 1em; height: 1em; flex: none; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+
+        /* ── Backdrop: blurred colour from the "artwork", tinted and darkened like the app ───────────── */
+
+        .backdrop { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; background: #12060c; }
+        .backdrop .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: .85;
+            transition: background 2.4s var(--ease);
+            will-change: transform;
+        }
+        .blob.b1 { width: 70vmax; height: 70vmax; left: -18vmax; top: -24vmax; background: var(--a); animation: float1 26s var(--ease) infinite alternate; }
+        .blob.b2 { width: 60vmax; height: 60vmax; right: -20vmax; top: 10vh; background: var(--b); animation: float2 30s var(--ease) infinite alternate; }
+        .blob.b3 { width: 55vmax; height: 55vmax; left: 20vw; bottom: -30vmax; background: var(--c); animation: float3 34s var(--ease) infinite alternate; }
+        .backdrop::after {
+            /* keeps white text readable on bright artwork, like the app's overlay */
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0, 0, 0, .28), rgba(0, 0, 0, .55) 60%, rgba(0, 0, 0, .72));
+        }
+        .noise {
+            position: absolute; inset: 0; z-index: 1; opacity: .06; mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+        @keyframes float1 { to { transform: translate3d(8vw, 6vh, 0) scale(1.08); } }
+        @keyframes float2 { to { transform: translate3d(-10vw, 8vh, 0) scale(.94); } }
+        @keyframes float3 { to { transform: translate3d(6vw, -10vh, 0) scale(1.1); } }
+
+        /* ── Glass ────────────────────────────────────────────────────────────────────────────────── */
+
+        .glass {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            -webkit-backdrop-filter: blur(28px) saturate(140%);
+            backdrop-filter: blur(28px) saturate(140%);
+            box-shadow: inset 0 1px rgba(255, 255, 255, .08), 0 20px 50px -20px rgba(0, 0, 0, .55);
+        }
+
+        /* ── Custom scrollbar (shared site script) ─────────────────────────────────────────────────── */
+
+        #custom-scrollbar { position: fixed; right: 4px; top: 8px; width: 4px; height: calc(100% - 16px); z-index: 9999; pointer-events: none; }
+        #custom-scrollbar-thumb { position: absolute; left: 0; right: 0; min-height: 28px; border-radius: 999px; background: rgba(255, 255, 255, .3); opacity: 0; transition: opacity .3s ease; }
+        #custom-scrollbar.scrolling #custom-scrollbar-thumb { opacity: 1; }
+
+        /* ── Title bar (like the app's) ───────────────────────────────────────────────────────────── */
+
+        .wrap { width: min(1180px, calc(100% - 40px)); margin-inline: auto; }
+
+        .titlebar {
+            position: sticky; top: 0; z-index: 50;
+            height: 52px;
+            display: flex; align-items: center;
+            background: linear-gradient(180deg, rgba(10, 4, 8, .55), rgba(10, 4, 8, 0));
+        }
+        .titlebar .wrap { display: flex; align-items: center; gap: 14px; }
+        .logo-dot {
+            width: 22px; height: 22px; border-radius: 50%;
+            display: grid; place-items: center;
+            background: rgba(255, 255, 255, .25); border: 1px solid var(--border);
+        }
+        .logo-dot svg { width: 12px; height: 12px; stroke-width: 2.4; }
+        .app-name { font-size: 14px; font-weight: 600; color: var(--subtle); }
+        .tb-back {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 12px; border-radius: 999px;
+            font-size: 13px; font-weight: 600; color: var(--subtle); text-decoration: none;
+            transition: background .2s, color .2s;
+        }
+        .tb-back:hover { background: var(--raised); color: #fff; }
+        .tb-spacer { flex: 1; }
+
+        /* ── Buttons (the app's pills and frosted play disc) ───────────────────────────────────────── */
+
+        .pill {
+            display: inline-flex; align-items: center; gap: 9px;
+            padding: 11px 20px; border-radius: 999px;
+            font: 600 14px/1 var(--font); color: #fff; text-decoration: none;
+            background: var(--raised); border: 1px solid transparent;
+            transition: background .2s, transform .15s var(--ease);
+        }
+        .pill:hover { background: var(--hover); }
+        .pill:active { transform: scale(.96); }
+        .pill.ghost { background: transparent; border-color: var(--border); color: var(--subtle); }
+        .pill.ghost:hover { color: #fff; border-color: var(--border-strong); background: rgba(255, 255, 255, .06); }
+        .pill .icon { font-size: 17px; }
+
+        .play-disc {
+            width: 58px; height: 58px; border-radius: 50%; flex: none;
+            display: grid; place-items: center;
+            background: rgba(255, 255, 255, .18); border: 1px solid rgba(255, 255, 255, .30);
+            -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+            color: #fff; text-decoration: none;
+            transition: background .2s, transform .15s var(--ease);
+        }
+        .play-disc:hover { background: rgba(255, 255, 255, .26); transform: scale(1.04); }
+        .play-disc:active { transform: scale(.95); }
+        .play-disc svg { width: 24px; height: 24px; }
+
+        .chip {
+            display: inline-flex; align-items: center; gap: 7px;
+            padding: 6px 12px; border-radius: 999px;
+            font-size: 12.5px; font-weight: 600; color: var(--subtle);
+            background: rgba(255, 255, 255, .07); border: 1px solid var(--border);
+        }
+        .chip strong { color: #fff; }
+        .chip .icon { font-size: 14px; }
+
+        /* ── Hero ─────────────────────────────────────────────────────────────────────────────────── */
+
+        .hero { padding: 54px 0 36px; display: grid; grid-template-columns: auto 1fr; gap: 34px; align-items: end; }
+        .hero-art {
+            width: 196px; height: 196px; border-radius: 12px; overflow: hidden;
+            box-shadow: 0 24px 50px -12px rgba(0, 0, 0, .6);
+            background: rgba(255, 255, 255, .1);
+        }
+        .hero-art img { width: 100%; height: 100%; object-fit: cover; }
+        .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--subtle); }
+        .hero h1 { font-size: clamp(54px, 9vw, 96px); line-height: .95; font-weight: 800; letter-spacing: -.035em; margin: 8px 0 14px; }
+        .hero p.lead { font-size: 17px; color: var(--subtle); max-width: 620px; }
+        .actions { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; margin-top: 24px; }
+        .meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+
+        .new-badge {
+            display: inline-flex; align-items: center; gap: 8px; margin-bottom: 14px;
+            padding: 6px 14px 6px 8px; border-radius: 999px; text-decoration: none;
+            font-size: 13px; font-weight: 600; color: var(--subtle);
+            background: rgba(255, 255, 255, .08); border: 1px solid var(--border);
+            transition: background .2s, color .2s;
+        }
+        .new-badge b { padding: 2px 8px; border-radius: 999px; background: #fff; color: #1a0610; font-size: 11px; letter-spacing: .04em; }
+        .new-badge:hover { background: rgba(255, 255, 255, .14); color: #fff; }
+
+        /* ── The app, recreated ───────────────────────────────────────────────────────────────────── */
+
+        .showcase { margin: 10px 0 70px; }
+        .window {
+            position: relative;
+            border-radius: 12px; overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, .18);
+            box-shadow: 0 50px 120px -30px rgba(0, 0, 0, .8), 0 0 0 1px rgba(0, 0, 0, .3);
+            background: #1a0811;
+            isolation: isolate;
+            user-select: none;
+        }
+        .window .art-bg { position: absolute; inset: -60px; z-index: -1; filter: blur(60px) saturate(150%); opacity: .95; }
+        .window .art-bg span { position: absolute; border-radius: 50%; transition: background 2.4s var(--ease); }
+        .window .art-bg span:nth-child(1) { inset: 0 45% 30% 0; background: var(--a); }
+        .window .art-bg span:nth-child(2) { inset: 20% 0 0 40%; background: var(--b); }
+        .window .art-bg span:nth-child(3) { inset: 50% 30% -10% 10%; background: var(--c); }
+        .window::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(0, 0, 0, .25), rgba(0, 0, 0, .45)); }
+
+        .w-title { height: 36px; display: flex; align-items: center; gap: 8px; padding: 0 0 0 16px; font-size: 12px; font-weight: 600; color: var(--subtle); }
+        .w-title .logo-dot { width: 18px; height: 18px; }
+        .w-title .logo-dot svg { width: 10px; height: 10px; }
+        .w-title .back { margin-left: 8px; font-size: 14px; color: var(--subtle); }
+        .w-title .caps { margin-left: auto; display: flex; }
+        .w-title .caps span { width: 46px; height: 36px; display: grid; place-items: center; color: var(--subtle); font-size: 13px; }
+
+        .w-body { display: grid; grid-template-columns: 58px 1fr 290px; gap: 8px; padding: 0 8px; height: 560px; }
+        .w-side, .w-main, .w-right { background: rgba(16, 16, 22, .35); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+        .w-side { padding: 10px 8px; display: flex; flex-direction: column; gap: 4px; }
+        .nav-i { height: 38px; border-radius: 8px; display: grid; place-items: center; color: var(--subtle); font-size: 18px; }
+        .nav-i.on { background: var(--hover); color: #fff; }
+        .nav-i.bottom { margin-top: auto; }
+
+        .w-main { position: relative; }
+        .page { position: absolute; inset: 0; padding: 26px 26px 0; overflow: hidden; transition: opacity .32s var(--ease), transform .42s var(--ease); }
+        .page.content { opacity: 0; transform: translateY(14px); }
+        .loaded .page.content { opacity: 1; transform: none; }
+        .loaded .page.skeleton { opacity: 0; }
+
+        .p-head { display: flex; gap: 22px; align-items: flex-end; }
+        .p-cover { width: 132px; height: 132px; border-radius: 8px; flex: none; box-shadow: 0 10px 30px rgba(0, 0, 0, .45); }
+        .p-title { font-size: 34px; font-weight: 800; letter-spacing: -.02em; line-height: 1.05; }
+        .p-sub { font-size: 12px; color: var(--subtle); margin-top: 6px; }
+        .p-desc { font-size: 12px; color: var(--subtle); margin-top: 6px; max-width: 420px; }
+        .p-btns { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
+        .p-btns .disc { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; background: rgba(255, 255, 255, .18); border: 1px solid rgba(255, 255, 255, .3); font-size: 17px; }
+        .p-btns .ic { color: var(--subtle); font-size: 18px; }
+        .p-btns .mix { display: inline-flex; align-items: center; gap: 7px; padding: 8px 14px; border-radius: 999px; background: var(--raised); font-size: 12.5px; font-weight: 600; }
+
+        .p-label { font-size: 18px; font-weight: 700; margin: 18px 0 6px; }
+        .row { display: grid; grid-template-columns: 26px 36px 1fr 0.8fr 28px 40px; align-items: center; gap: 10px; height: 44px; padding: 0 6px; border-radius: 8px; font-size: 12.5px; }
+        .row:hover, .row.playing { background: rgba(255, 255, 255, .07); }
+        .row .n { color: var(--subtle); text-align: center; }
+        .row .a { width: 34px; height: 34px; border-radius: 5px; }
+        .row .t b { display: block; font-weight: 500; font-size: 13px; color: #fff; }
+        .row .t span { color: var(--subtle); font-size: 11.5px; }
+        .row .al, .row .d { color: var(--subtle); }
+        .row .d { text-align: right; }
+        .row .h { color: var(--subtle); font-size: 15px; }
+        .row.playing .t b, .row.playing .n { color: #fff; font-weight: 700; }
+        .e { display: inline-grid; place-items: center; width: 12px; height: 12px; border-radius: 2.5px; background: rgba(255, 255, 255, .45); color: #120610; font-size: 8px; font-weight: 800; margin-right: 5px; vertical-align: -1px; }
+
+        .tiles { display: flex; gap: 14px; }
+        .tile { width: 110px; flex: none; }
+        .tile .c { width: 110px; height: 110px; border-radius: 7px; }
+        .tile b { display: block; font-size: 12px; font-weight: 600; margin-top: 7px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .tile span { font-size: 11px; color: var(--subtle); }
+
+        /* Fictional covers (gradients), so nothing here is anyone's real artwork */
+        .cv1 { background: radial-gradient(circle at 30% 30%, #ffb35c, transparent 55%), linear-gradient(135deg, #e0244f, #4a0d6b); }
+        .cv2 { background: radial-gradient(circle at 70% 35%, #7ef0ff, transparent 45%), linear-gradient(160deg, #1636b8, #0b0f3a); }
+        .cv3 { background: radial-gradient(circle at 50% 70%, #ffe27a, transparent 50%), linear-gradient(200deg, #0f8f6e, #062a2a); }
+        .cv4 { background: radial-gradient(circle at 25% 75%, #ff7ad9, transparent 50%), linear-gradient(120deg, #2a0c45, #a3145a); }
+        .cv5 { background: conic-gradient(from 200deg at 60% 40%, #f45d22, #ffcf6b, #c2185b, #f45d22); }
+        .cv6 { background: radial-gradient(circle at 40% 40%, #ffffff55, transparent 40%), linear-gradient(150deg, #3b3b46, #0d0d12); }
+
+        /* Loading skeleton: glass panes and a shine that sweeps across, like the app */
+        .sk { position: relative; overflow: hidden; border-radius: 8px; border: 1px solid rgba(255, 255, 255, .14);
+              background: linear-gradient(180deg, rgba(255, 255, 255, .14), rgba(255, 255, 255, .06)); }
+        .sk::after {
+            content: ""; position: absolute; inset: 0;
+            background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, .06) 42%, rgba(255, 255, 255, .22) 50%, rgba(255, 255, 255, .06) 58%, transparent 70%);
+            transform: translateX(-120%);
+            animation: shine 2.2s var(--ease) infinite;
+            animation-delay: calc(var(--x, 0) * .6s);
+        }
+        @keyframes shine { 0% { transform: translateX(-120%); } 45%, 100% { transform: translateX(120%); } }
+        .sk.round { border-radius: 50%; }
+        .sk.line { border-radius: 99px; }
+
+        /* Lyrics panel with the karaoke sweep */
+        .w-right { display: flex; flex-direction: column; }
+        .tabs { display: flex; gap: 6px; padding: 10px 12px 6px; }
+        .tabs span { padding: 5px 13px; border-radius: 99px; font-size: 12px; font-weight: 600; }
+        .tabs span.on { background: rgba(255, 255, 255, .22); }
+        .lyrics { position: relative; flex: 1; overflow: hidden; -webkit-mask-image: linear-gradient(180deg, transparent, #000 12%, #000 75%, transparent); mask-image: linear-gradient(180deg, transparent, #000 12%, #000 75%, transparent); }
+        .lyrics ol { list-style: none; padding: 40px 18px 200px; transition: transform .55s cubic-bezier(.2, .8, .2, 1); }
+        .lyrics li {
+            font-size: 19px; font-weight: 700; line-height: 1.25; margin: 0 0 14px;
+            color: rgba(255, 255, 255, .35);
+            transform: scale(.96); transform-origin: left center;
+            transition: transform .28s var(--ease), color .3s;
+        }
+        .lyrics li.past { color: rgba(255, 255, 255, .35); }
+        .lyrics li.on {
+            transform: scale(1);
+            color: transparent;
+            background: linear-gradient(90deg, #fff 0 var(--p), rgba(255, 255, 255, .35) calc(var(--p) + 12%));
+            -webkit-background-clip: text; background-clip: text;
+            animation: sweep var(--dur, 2.6s) linear forwards;
+        }
+        @property --p { syntax: "<percentage>"; inherits: false; initial-value: 0%; }
+        @keyframes sweep { from { --p: -12%; } to { --p: 100%; } }
+        .dots { display: flex; gap: 7px; }
+        .dots { padding: 6px 0; }
+        .dots i { width: 9px; height: 9px; border-radius: 50%; background: rgba(255, 255, 255, .35); transition: background .4s, transform .4s var(--ease); }
+        .lyrics li.brk.on { background: none; color: inherit; }
+        .lyrics li.brk.on .dots i { background: #fff; transform: translateY(-2px) scale(1.15); }
+        .lyrics li.brk.on .dots i:nth-child(2) { transition-delay: .6s; }
+        .lyrics li.brk.on .dots i:nth-child(3) { transition-delay: 1.2s; }
+
+        /* Player bar */
+        .w-player { height: 84px; display: grid; grid-template-columns: 1fr 1.3fr 1fr; align-items: center; padding: 0 18px; gap: 16px; }
+        .np { display: flex; align-items: center; gap: 12px; min-width: 0; }
+        .np .a { width: 50px; height: 50px; border-radius: 6px; flex: none; transition: background 1s; }
+        .np b { display: block; font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .np span { font-size: 11.5px; color: var(--subtle); }
+        .np .h { color: var(--subtle); margin-left: 6px; font-size: 16px; }
+        .transport { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+        .tr-btns { display: flex; align-items: center; gap: 18px; color: var(--subtle); font-size: 16px; }
+        .tr-btns .disc { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; background: rgba(255, 255, 255, .18); border: 1px solid rgba(255, 255, 255, .3); color: #fff; }
+        .seek { display: grid; grid-template-columns: 34px 1fr 34px; gap: 8px; align-items: center; width: 100%; font-size: 10.5px; color: var(--subtle); }
+        .seek .rail { height: 4px; border-radius: 4px; background: rgba(255, 255, 255, .22); overflow: hidden; }
+        .seek .fill { height: 100%; width: 0; background: #fff; border-radius: 4px; transition: width .25s linear; }
+        .seek span:last-child { text-align: right; }
+        .extras { display: flex; justify-content: flex-end; align-items: center; gap: 14px; color: var(--subtle); font-size: 16px; }
+        .extras .vol { width: 86px; height: 4px; border-radius: 4px; background: linear-gradient(90deg, #fff 70%, rgba(255, 255, 255, .22) 70%); }
+
+        .caption { text-align: center; color: var(--faint); font-size: 13px; margin-top: 16px; }
+
+        /* ── Sections ─────────────────────────────────────────────────────────────────────────────── */
+
+        section.block { margin: 0 0 72px; }
+        .block-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+        .block-head h2 { font-size: 30px; font-weight: 800; letter-spacing: -.02em; }
+        .block-head p { color: var(--subtle); font-size: 14px; margin-top: 2px; }
+        .see-all { font-size: 13px; font-weight: 600; color: var(--subtle); text-decoration: none; padding: 6px 12px; border-radius: 999px; white-space: nowrap; }
+        .see-all:hover { color: #fff; background: var(--raised); }
+
+        .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+        .card { padding: 22px; transition: transform .25s var(--ease), border-color .25s, background .25s; }
+        .card:hover { transform: translateY(-3px); border-color: var(--border-strong); background: rgba(16, 16, 22, .45); }
+        .card .ci { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; background: rgba(255, 255, 255, .12); font-size: 20px; margin-bottom: 14px; }
+        .card h3 { font-size: 16.5px; font-weight: 700; margin-bottom: 6px; }
+        .card p { font-size: 13.5px; color: var(--subtle); line-height: 1.55; }
+
+        .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px 28px; padding: 14px 18px; }
+        .feat { display: flex; gap: 14px; padding: 14px 6px; align-items: flex-start; }
+        .feat .ci { font-size: 19px; color: #fff; margin-top: 2px; }
+        .feat b { display: block; font-size: 14.5px; font-weight: 600; }
+        .feat span { font-size: 13px; color: var(--subtle); }
+
+        .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; counter-reset: step; }
+        .step { padding: 22px; counter-increment: step; }
+        .step::before { content: counter(step); display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: #fff; color: #1a0610; font-weight: 800; font-size: 14px; margin-bottom: 14px; }
+        .step > b { display: block; font-size: 15px; margin-bottom: 4px; }
+        .step span b { color: #fff; font-weight: 600; }
+        .step span { font-size: 13.5px; color: var(--subtle); }
+        code { font-family: "Cascadia Code", Consolas, ui-monospace, monospace; font-size: .92em; padding: 1px 6px; border-radius: 6px; background: rgba(255, 255, 255, .1); }
+
+        .cta { padding: 34px; display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+        .cta h2 { font-size: 26px; font-weight: 800; letter-spacing: -.02em; }
+        .cta p { color: var(--subtle); font-size: 14px; }
+        .cta .grow { flex: 1; min-width: 240px; }
+
+        footer { margin-top: auto; padding: 26px 0 34px; color: var(--faint); font-size: 13px; }
+        footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+        footer nav { display: flex; gap: 18px; }
+        footer a { text-decoration: none; color: var(--subtle); }
+        footer a:hover { color: #fff; }
+
+        /* Entrances */
+        .reveal { opacity: 0; transform: translateY(16px); transition: opacity .6s var(--ease), transform .7s var(--ease); transition-delay: calc(var(--i, 0) * 70ms); }
+        .reveal.in { opacity: 1; transform: none; }
+
+        /* ── Smaller screens ──────────────────────────────────────────────────────────────────────── */
+
+        @media (max-width: 1020px) {
+            .w-body { grid-template-columns: 58px 1fr; }
+            .w-right { display: none; }
+            .cards, .features { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 760px) {
+            .hero { grid-template-columns: 1fr; gap: 22px; padding-top: 30px; }
+            .hero-art { width: 132px; height: 132px; }
+            .w-body { grid-template-columns: 1fr; height: 470px; }
+            .w-side { display: none; }
+            .row { grid-template-columns: 22px 34px 1fr 38px; }
+            .row .al, .row .h { display: none; }
+            .w-player { grid-template-columns: minmax(0, 1fr) auto; padding: 0 12px; }
+            .np .h, .tr-btns > svg:first-child, .tr-btns > svg:last-child { display: none; }
+            .tr-btns { gap: 12px; }
+            .extras { display: none; }
+            .transport .seek { display: none; }
+            .p-cover { width: 96px; height: 96px; }
+            .p-title { font-size: 26px; }
+            .p-desc { display: none; }
+            .cards, .features, .steps { grid-template-columns: 1fr; }
+            .block-head { flex-direction: column; align-items: flex-start; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+            .reveal { opacity: 1; transform: none; }
+            .lyrics li.on { color: #fff; background: none; }
+        }
+    </style>
 </head>
 
 <body>
 
-    <div class="bg" aria-hidden="true">
-        <video class="bg-video" autoplay muted loop playsinline preload="auto" poster="/assets/topography-poster.jpg">
-            <source src="/assets/topography-loop.mp4" type="video/mp4">
-        </video>
-        <div class="bg-noise"></div>
+    <!-- SVG icons (outline style, like the app's Segoe icons) -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+        <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5m6-6-6 6 6 6"/></symbol>
+        <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 3v12m0 0-5-5m5 5 5-5M5 21h14"/></symbol>
+        <symbol id="i-code" viewBox="0 0 24 24"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></symbol>
+        <symbol id="i-home" viewBox="0 0 24 24"><path d="M3.5 10.5 12 3.5l8.5 7V20a1 1 0 0 1-1 1H15v-6H9v6H4.5a1 1 0 0 1-1-1z"/></symbol>
+        <symbol id="i-lib" viewBox="0 0 24 24"><path d="M4 4v16M9 4v16M14 4.5l5.5 15"/></symbol>
+        <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.7 5.6 3.7 9s-1.2 6.4-3.7 9c-2.5-2.6-3.7-5.6-3.7-9S9.5 5.6 12 3Z"/></symbol>
+        <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.4-4.4"/></symbol>
+        <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></symbol>
+        <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor" stroke="none"/></symbol>
+        <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14" stroke-width="2.6"/></symbol>
+        <symbol id="i-shuffle" viewBox="0 0 24 24"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></symbol>
+        <symbol id="i-prev" viewBox="0 0 24 24"><path d="M19 20 9 12l10-8zM5 19V5"/></symbol>
+        <symbol id="i-next" viewBox="0 0 24 24"><path d="m5 4 10 8-10 8zM19 5v14"/></symbol>
+        <symbol id="i-repeat" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14M7 22l-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></symbol>
+        <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8Z"/></symbol>
+        <symbol id="i-more" viewBox="0 0 24 24"><path d="M5 12h.01M12 12h.01M19 12h.01" stroke-width="3"/></symbol>
+        <symbol id="i-radio" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8a6 6 0 0 1 0 8.4M7.8 16.2a6 6 0 0 1 0-8.4M19 5a10 10 0 0 1 0 14M5 19A10 10 0 0 1 5 5"/></symbol>
+        <symbol id="i-lyrics" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+        <symbol id="i-queue" viewBox="0 0 24 24"><path d="M3 6h18M3 12h12M3 18h8M17 15v6l4-3z"/></symbol>
+        <symbol id="i-mini" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><rect x="12" y="11" width="7" height="6" rx="1"/></symbol>
+        <symbol id="i-vol" viewBox="0 0 24 24"><path d="M11 5 6 9H2v6h4l5 4zM15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></symbol>
+        <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/></symbol>
+        <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+        <symbol id="i-disc" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/></symbol>
+        <symbol id="i-wave" viewBox="0 0 24 24"><path d="M2 12h2M6 8v8M10 4v16M14 7v10M18 10v4M22 12h0"/></symbol>
+        <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 2 10 5-10 5L2 7z"/><path d="m2 17 10 5 10-5M2 12l10 5 10-5"/></symbol>
+        <symbol id="i-hdd" viewBox="0 0 24 24"><rect x="2" y="13" width="20" height="8" rx="2"/><path d="M5 13 7.5 4h9L19 13M6 17h.01"/></symbol>
+        <symbol id="i-block" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m5.6 5.6 12.8 12.8"/></symbol>
+        <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></symbol>
+        <symbol id="i-discord" viewBox="0 0 24 24"><path d="M8 17c-3 0-5-1.5-5-1.5S3 9 6 6c1.5-1 3-1.3 3-1.3l.6 1.3a14 14 0 0 1 4.8 0L15 4.7s1.5.3 3 1.3c3 3 3 9.5 3 9.5S19 17 16 17l-1-1.8"/><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/></symbol>
+        <symbol id="i-shuffle2" viewBox="0 0 24 24"><path d="M3 7h3c4 0 6 10 10 10h5M18 14l3 3-3 3M3 17h3c1.5 0 2.7-1.3 3.7-3M18 4l3 3-3 3M14 9.5C15 8 16 7 18 7h3"/></symbol>
+    </svg>
+
+    <div class="backdrop" aria-hidden="true">
+        <div class="blob b1"></div>
+        <div class="blob b2"></div>
+        <div class="blob b3"></div>
+        <div class="noise"></div>
     </div>
 
-    <div id="custom-scrollbar" aria-hidden="true">
-        <div id="custom-scrollbar-thumb"></div>
-    </div>
+    <div id="custom-scrollbar" aria-hidden="true"><div id="custom-scrollbar-thumb"></div></div>
 
-    <header class="topbar">
+    <header class="titlebar">
         <div class="wrap">
-            <a class="back" href="/">
-                <svg class="icon icon-stroke" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-                YesHub
-            </a>
-            <a class="wordmark" href="/"><img src="/assets/YesHub.png" alt="">YesHub</a>
+            <span class="logo-dot" aria-hidden="true"><svg class="icon"><use href="#i-check"/></svg></span>
+            <span class="app-name">Yesify</span>
+            <a class="tb-back" href="/"><svg class="icon"><use href="#i-back"/></svg> YesHub</a>
+            <span class="tb-spacer"></span>
+            <a class="tb-back" href="https://github.com/YesD3v/Yesify-Desktop-App" target="_blank" rel="noopener noreferrer"><svg class="icon"><use href="#i-code"/></svg> Source</a>
         </div>
     </header>
 
-    <main class="product">
-        <div class="wrap-narrow">
+    <main>
+        <div class="wrap">
 
-            <!-- Hero -->
-            <section class="panel product-hero reveal" style="--i:0">
-
-                <div class="logo-wrap">
-                    <img src="/assets/Yesify-Desktop.png" alt="Yesify Desktop">
-                </div>
-
-                <h1 class="product-title">Yesify Desktop</h1>
-                <p class="product-sub">A free, native music player for Windows. Paste a Spotify link and play &mdash; no account, no Premium, no ads.</p>
-
-                <div class="product-actions">
-                    <a class="btn btn-primary" href="https://github.com/YesD3v/Yesify-Desktop-App/releases/download/Built/Yesify.exe">
-                        <svg class="icon icon-stroke" viewBox="0 0 24 24"><path d="M12 3v12m0 0-5-5m5 5 5-5M5 21h14"/></svg>
-                        Download for Windows
+            <!-- Hero, laid out like a page header in the app -->
+            <section class="hero">
+                <div class="hero-art reveal"><img src="/assets/Yesify-Desktop.png" alt="Yesify icon"></div>
+                <div class="reveal" style="--i:1">
+                    <a class="new-badge" id="releaseBadge" href="https://github.com/YesD3v/Yesify-Desktop-App/releases/latest" target="_blank" rel="noopener noreferrer">
+                        <b>NEW</b> <span id="releaseName">YouTube Music, Explore &amp; glass loading</span>
                     </a>
-                    <a class="btn btn-ghost" href="https://github.com/YesD3v/Yesify-Desktop-App" target="_blank" rel="noopener noreferrer">
-                        <svg class="icon icon-stroke" viewBox="0 0 24 24"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg>
-                        View source
-                    </a>
+                    <div class="eyebrow">Music player for Windows</div>
+                    <h1>Yesify</h1>
+                    <p class="lead">All of YouTube Music and your Spotify playlists in one native, glassy player. No account, no Premium, no ads, unlimited skips.</p>
+                    <div class="actions">
+                        <a class="play-disc" href="https://github.com/YesD3v/Yesify-Desktop-App/releases/latest/download/Yesify.exe" aria-label="Download Yesify.exe">
+                            <svg class="icon"><use href="#i-down"/></svg>
+                        </a>
+                        <a class="pill" href="https://github.com/YesD3v/Yesify-Desktop-App/releases/latest/download/Yesify.exe">Download for Windows</a>
+                        <a class="pill ghost" href="https://github.com/YesD3v/Yesify-Desktop-App" target="_blank" rel="noopener noreferrer">
+                            <svg class="icon"><use href="#i-code"/></svg> View source
+                        </a>
+                    </div>
+                    <div class="meta">
+                        <span class="chip" id="dlChip" hidden><svg class="icon"><use href="#i-down"/></svg><strong id="dlCount">-</strong> downloads</span>
+                        <span class="chip">Yesify.exe &middot; 162 MB</span>
+                        <span class="chip">Windows 10 / 11 (64-bit)</span>
+                        <span class="chip">Free &amp; open source</span>
+                    </div>
                 </div>
-
-                <div class="product-meta">
-                    <span class="chip dl-chip" id="dlChip" hidden>
-                        <svg class="icon icon-stroke" viewBox="0 0 24 24"><path d="M12 3v12m0 0-5-5m5 5 5-5M5 21h14"/></svg>
-                        <strong id="dlCount">-</strong> downloads
-                    </span>
-                    <span class="chip">Yesify.exe &middot; 162 MB</span>
-                    <span class="chip">Windows 10 / 11 (64-bit)</span>
-                    <span class="chip">Open source</span>
-                </div>
-
             </section>
 
-            <!-- Features -->
-            <section class="section reveal" style="--i:1">
-                <h2 class="section-title">Features</h2>
-                <div class="features">
-                    <div class="feature">
-                        <div class="feature-icon"><svg class="icon icon-stroke" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m5.6 5.6 12.8 12.8"/></svg></div>
-                        <div>
-                            <div class="feature-title">No Account, No Ads</div>
-                            <div class="feature-desc">Paste a public Spotify or YouTube link and play. Unlimited skips.</div>
+            <!-- The app itself, recreated: an artist page loading in, lyrics following the song -->
+            <section class="showcase reveal" style="--i:2" aria-label="What Yesify looks like">
+                <div class="window" id="appWindow">
+                    <div class="art-bg" aria-hidden="true"><span></span><span></span><span></span></div>
+
+                    <div class="w-title" aria-hidden="true">
+                        <span class="logo-dot"><svg class="icon"><use href="#i-check"/></svg></span>
+                        Yesify
+                        <svg class="icon back"><use href="#i-back"/></svg>
+                        <div class="caps"><span>&#x2013;</span><span>&#x25A1;</span><span>&#x2715;</span></div>
+                    </div>
+
+                    <div class="w-body" aria-hidden="true">
+                        <nav class="w-side">
+                            <div class="nav-i"><svg class="icon"><use href="#i-home"/></svg></div>
+                            <div class="nav-i"><svg class="icon"><use href="#i-lib"/></svg></div>
+                            <div class="nav-i on"><svg class="icon"><use href="#i-globe"/></svg></div>
+                            <div class="nav-i"><svg class="icon"><use href="#i-search"/></svg></div>
+                            <div class="nav-i bottom"><svg class="icon"><use href="#i-gear"/></svg></div>
+                        </nav>
+
+                        <div class="w-main" id="mockMain">
+                            <!-- loading: glass placeholders with the sweeping shine -->
+                            <div class="page skeleton">
+                                <div class="p-head">
+                                    <div class="sk" style="width:132px;height:132px"></div>
+                                    <div style="flex:1">
+                                        <div class="sk line" style="width:56%;height:30px;--x:.3"></div>
+                                        <div class="sk line" style="width:30%;height:10px;margin-top:12px;--x:.3"></div>
+                                        <div class="sk line" style="width:62%;height:9px;margin-top:10px;--x:.35"></div>
+                                        <div style="display:flex;gap:12px;margin-top:14px">
+                                            <div class="sk round" style="width:42px;height:42px;--x:.3"></div>
+                                            <div class="sk round" style="width:30px;height:30px;--x:.35"></div>
+                                            <div class="sk round" style="width:30px;height:30px;--x:.4"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="margin-top:30px">
+                                    <div class="row"><div class="sk line" style="width:10px;height:8px"></div><div class="sk" style="width:34px;height:34px;--x:.05"></div><div><div class="sk line" style="width:58%;height:9px;--x:.2"></div><div class="sk line" style="width:32%;height:8px;margin-top:7px;--x:.2"></div></div><div class="sk line" style="width:70%;height:8px;--x:.6"></div><div></div><div class="sk line" style="width:26px;height:8px;--x:.9"></div></div>
+                                    <div class="row"><div class="sk line" style="width:10px;height:8px"></div><div class="sk" style="width:34px;height:34px;--x:.05"></div><div><div class="sk line" style="width:44%;height:9px;--x:.2"></div><div class="sk line" style="width:26%;height:8px;margin-top:7px;--x:.2"></div></div><div class="sk line" style="width:52%;height:8px;--x:.6"></div><div></div><div class="sk line" style="width:26px;height:8px;--x:.9"></div></div>
+                                    <div class="row"><div class="sk line" style="width:10px;height:8px"></div><div class="sk" style="width:34px;height:34px;--x:.05"></div><div><div class="sk line" style="width:64%;height:9px;--x:.2"></div><div class="sk line" style="width:30%;height:8px;margin-top:7px;--x:.2"></div></div><div class="sk line" style="width:62%;height:8px;--x:.6"></div><div></div><div class="sk line" style="width:26px;height:8px;--x:.9"></div></div>
+                                    <div class="row"><div class="sk line" style="width:10px;height:8px"></div><div class="sk" style="width:34px;height:34px;--x:.05"></div><div><div class="sk line" style="width:50%;height:9px;--x:.2"></div><div class="sk line" style="width:22%;height:8px;margin-top:7px;--x:.2"></div></div><div class="sk line" style="width:44%;height:8px;--x:.6"></div><div></div><div class="sk line" style="width:26px;height:8px;--x:.9"></div></div>
+                                </div>
+                                <div class="tiles" style="margin-top:24px">
+                                    <div class="sk" style="width:110px;height:110px;--x:.05"></div>
+                                    <div class="sk" style="width:110px;height:110px;--x:.25"></div>
+                                    <div class="sk" style="width:110px;height:110px;--x:.45"></div>
+                                    <div class="sk" style="width:110px;height:110px;--x:.65"></div>
+                                    <div class="sk" style="width:110px;height:110px;--x:.85"></div>
+                                </div>
+                            </div>
+
+                            <!-- loaded: an artist page (fictional artist and songs) -->
+                            <div class="page content">
+                                <div class="p-head">
+                                    <div class="p-cover cv4"></div>
+                                    <div>
+                                        <div class="p-title">Nova Lane</div>
+                                        <div class="p-sub">18.4M monthly audience</div>
+                                        <div class="p-desc">Night-drive synth pop from somewhere between the city lights and the coast.</div>
+                                        <div class="p-btns">
+                                            <span class="disc"><svg class="icon"><use href="#i-play"/></svg></span>
+                                            <svg class="icon ic"><use href="#i-shuffle"/></svg>
+                                            <svg class="icon ic"><use href="#i-more"/></svg>
+                                            <span class="mix"><svg class="icon"><use href="#i-radio"/></svg> Mix</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-label">Top songs</div>
+                                <div class="row playing"><span class="n">&#9835;</span><span class="a cv1"></span><span class="t"><b>Afterglow Avenue</b><span><i class="e">E</i>Nova Lane</span></span><span class="al">Neon Tides</span><svg class="icon h"><use href="#i-heart"/></svg><span class="d">3:41</span></div>
+                                <div class="row"><span class="n">2</span><span class="a cv2"></span><span class="t"><b>Static Hearts</b><span>Nova Lane, Kairo</span></span><span class="al">Neon Tides</span><svg class="icon h"><use href="#i-heart"/></svg><span class="d">2:58</span></div>
+                                <div class="row"><span class="n">3</span><span class="a cv5"></span><span class="t"><b>Paper Planets</b><span><i class="e">E</i>Nova Lane</span></span><span class="al">Orbit Season</span><svg class="icon h"><use href="#i-heart"/></svg><span class="d">4:12</span></div>
+                                <div class="row"><span class="n">4</span><span class="a cv3"></span><span class="t"><b>Lowlight</b><span>Nova Lane</span></span><span class="al">Orbit Season</span><svg class="icon h"><use href="#i-heart"/></svg><span class="d">3:20</span></div>
+                                <div class="p-label">Albums</div>
+                                <div class="tiles">
+                                    <div class="tile"><div class="c cv1"></div><b>Neon Tides</b><span>2026</span></div>
+                                    <div class="tile"><div class="c cv5"></div><b>Orbit Season</b><span>2024</span></div>
+                                    <div class="tile"><div class="c cv2"></div><b>Blue Hour</b><span>2023</span></div>
+                                    <div class="tile"><div class="c cv6"></div><b>Glasshouse</b><span>2021</span></div>
+                                    <div class="tile"><div class="c cv3"></div><b>Fieldnotes</b><span>2019</span></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <aside class="w-right">
+                            <div class="tabs"><span class="on">Lyrics</span><span>Queue</span></div>
+                            <div class="lyrics"><ol id="lyricLines"></ol></div>
+                        </aside>
+                    </div>
+
+                    <div class="w-player" aria-hidden="true">
+                        <div class="np">
+                            <span class="a cv1"></span>
+                            <div style="min-width:0"><b>Afterglow Avenue</b><span>Nova Lane</span></div>
+                            <svg class="icon h"><use href="#i-heart"/></svg>
+                        </div>
+                        <div class="transport">
+                            <div class="tr-btns">
+                                <svg class="icon"><use href="#i-shuffle"/></svg>
+                                <svg class="icon"><use href="#i-prev"/></svg>
+                                <span class="disc"><svg class="icon"><use href="#i-pause"/></svg></span>
+                                <svg class="icon"><use href="#i-next"/></svg>
+                                <svg class="icon"><use href="#i-repeat"/></svg>
+                            </div>
+                            <div class="seek"><span id="seekNow">0:48</span><div class="rail"><div class="fill" id="seekFill"></div></div><span>3:41</span></div>
+                        </div>
+                        <div class="extras">
+                            <svg class="icon"><use href="#i-lyrics"/></svg>
+                            <svg class="icon"><use href="#i-queue"/></svg>
+                            <svg class="icon"><use href="#i-mini"/></svg>
+                            <svg class="icon"><use href="#i-vol"/></svg>
+                            <span class="vol"></span>
                         </div>
                     </div>
-                    <div class="feature">
-                        <div class="feature-icon"><svg class="icon icon-stroke" viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h13"/></svg></div>
-                        <div>
-                            <div class="feature-title">Synced Lyrics</div>
-                            <div class="feature-desc">Word-by-word, Apple Music style. Click a line to jump to it.</div>
-                        </div>
+                </div>
+                <p class="caption">A page loading in, then lyrics following the song, word by word. (Artist and songs here are made up.)</p>
+            </section>
+
+            <!-- What's new -->
+            <section class="block">
+                <div class="block-head reveal">
+                    <div>
+                        <h2>New in this version</h2>
+                        <p>The biggest update yet: all of YouTube Music, and a smoother app everywhere.</p>
                     </div>
-                    <div class="feature">
-                        <div class="feature-icon"><svg class="icon icon-stroke" viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8Z"/></svg></div>
-                        <div>
-                            <div class="feature-title">Your Library</div>
-                            <div class="feature-desc">Liked Songs, your own playlists with covers, and search.</div>
-                        </div>
+                    <a class="see-all" href="https://github.com/YesD3v/Yesify-Desktop-App/releases/latest" target="_blank" rel="noopener noreferrer">Full release notes &rsaquo;</a>
+                </div>
+                <div class="cards">
+                    <div class="glass card reveal" style="--i:0">
+                        <div class="ci"><svg class="icon"><use href="#i-search"/></svg></div>
+                        <h3>Search all of YouTube Music</h3>
+                        <p>Songs, artists, albums and playlists, right next to the matches from your own library. No account needed.</p>
                     </div>
-                    <div class="feature">
-                        <div class="feature-icon"><svg class="icon icon-stroke" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M3 9h18"/></svg></div>
-                        <div>
-                            <div class="feature-title">Glass or Lightweight</div>
-                            <div class="feature-desc">Frosted glass over the artwork, or a flat look that uses ~7 MB.</div>
-                        </div>
+                    <div class="glass card reveal" style="--i:1">
+                        <div class="ci"><svg class="icon"><use href="#i-user"/></svg></div>
+                        <h3>Artist &amp; album pages</h3>
+                        <p>Top songs and every song, albums, singles, videos, playlists and similar artists. Save albums and playlists to your library.</p>
                     </div>
-                    <div class="feature">
-                        <div class="feature-icon"><svg class="icon icon-stroke" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="14" rx="2"/><rect x="12" y="10" width="7" height="5" rx="1"/></svg></div>
-                        <div>
-                            <div class="feature-title">Always-On-Top Mini Player</div>
-                            <div class="feature-desc">Freely resizable, colored from the album cover.</div>
-                        </div>
+                    <div class="glass card reveal" style="--i:2">
+                        <div class="ci"><svg class="icon"><use href="#i-globe"/></svg></div>
+                        <h3>Explore</h3>
+                        <p>New albums &amp; singles, trending songs, charts, top artists, and moods &amp; genres full of playlists.</p>
                     </div>
-                    <div class="feature">
-                        <div class="feature-icon"><svg class="icon icon-stroke" viewBox="0 0 24 24"><path d="m6 4 10 8-10 8V4ZM19 5v14"/></svg></div>
-                        <div>
-                            <div class="feature-title">Discord &amp; Media Keys</div>
-                            <div class="feature-desc">Rich Presence, the Windows media flyout and media keys.</div>
-                        </div>
+                    <div class="glass card reveal" style="--i:3">
+                        <div class="ci"><svg class="icon"><use href="#i-radio"/></svg></div>
+                        <h3>Radio &amp; Mixes</h3>
+                        <p>Start an endless radio from any song or artist. Go to the artist or album of anything playing, and go Back.</p>
                     </div>
+                    <div class="glass card reveal" style="--i:4">
+                        <div class="ci"><svg class="icon"><use href="#i-lyrics"/></svg></div>
+                        <h3>Lyrics that follow you</h3>
+                        <p>Ready before you press play. Scroll away and they wait; two seconds later they glide back to the line being sung.</p>
+                    </div>
+                    <div class="glass card reveal" style="--i:5">
+                        <div class="ci"><svg class="icon"><use href="#i-sparkle"/></svg></div>
+                        <h3>Glass &amp; smooth</h3>
+                        <p>Instant glass loading screens with a sweeping shine, smooth scrolling everywhere, and a cache size you choose.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Everything else -->
+            <section class="block">
+                <div class="block-head reveal"><div><h2>Everything you'd expect</h2><p>And a few things you wouldn't.</p></div></div>
+                <div class="glass features reveal">
+                    <div class="feat"><svg class="icon ci"><use href="#i-block"/></svg><div><b>No account, no ads</b><span>Unlimited skips, nothing to sign up for, no telemetry.</span></div></div>
+                    <div class="feat"><svg class="icon ci"><use href="#i-link"/></svg><div><b>Your Spotify playlists</b><span>Paste a playlist, album or song link and play it, however long it is.</span></div></div>
+                    <div class="feat"><svg class="icon ci"><use href="#i-heart"/></svg><div><b>Your library</b><span>Liked Songs and your own playlists with covers, kept on your PC.</span></div></div>
+                    <div class="feat"><svg class="icon ci"><use href="#i-wave"/></svg><div><b>Word-by-word lyrics</b><span>Apple Music-style sweep, timed to the exact audio. Click a line to jump.</span></div></div>
+                    <div class="feat"><svg class="icon ci"><use href="#i-home"/></svg><div><b>Home made for you</b><span>Daily mixes and picks built from what you actually play.</span></div></div>
+                    <div class="feat"><svg class="icon ci"><use href="#i-shuffle2"/></svg><div><b>Shuffle that remembers</b><span>Songs you haven't heard lately come first.</span></div></div>
+                    <div class="feat"><svg class="icon ci"><use href="#i-mini"/></svg><div><b>Miniplayer</b><span>Always on top, freely resizable, colored from the cover.</span></div></div>
+                    <div class="feat"><svg class="icon ci"><use href="#i-discord"/></svg><div><b>Discord &amp; media keys</b><span>Rich Presence, the Windows media flyout and your keyboard's media keys.</span></div></div>
+                    <div class="feat"><svg class="icon ci"><use href="#i-hdd"/></svg><div><b>Plays from the tray</b><span>Close the window and the music keeps going, using very little memory.</span></div></div>
                 </div>
             </section>
 
             <!-- Quick start -->
-            <section class="section reveal" style="--i:2">
-                <h2 class="section-title">Quick start</h2>
-                <ol class="panel steps">
-                    <li><span>Download <code>Yesify.exe</code> and run it. No installer, no setup.</span></li>
-                    <li><span>If Windows SmartScreen appears, click <b>More info</b> then <b>Run anyway</b>.</span></li>
-                    <li><span>Click <b>Import Playlist</b> and paste a Spotify playlist, album or song link.</span></li>
-                </ol>
+            <section class="block">
+                <div class="block-head reveal"><div><h2>Up and running in a minute</h2></div></div>
+                <div class="steps">
+                    <div class="glass step reveal" style="--i:0"><b>Download</b><span>Grab <code>Yesify.exe</code> and run it. One portable file: no installer, no .NET, nothing to set up.</span></div>
+                    <div class="glass step reveal" style="--i:1"><b>Let it run</b><span>If Windows SmartScreen appears, click <b>More info</b>, then <b>Run anyway</b> (the exe isn't code-signed).</span></div>
+                    <div class="glass step reveal" style="--i:2"><b>Play anything</b><span>Search YouTube Music, open Explore, or click <b>Import Playlist</b> and paste a Spotify link.</span></div>
+                </div>
+            </section>
+
+            <section class="block">
+                <div class="glass cta reveal">
+                    <a class="play-disc" href="https://github.com/YesD3v/Yesify-Desktop-App/releases/latest/download/Yesify.exe" aria-label="Download Yesify.exe"><svg class="icon"><use href="#i-down"/></svg></a>
+                    <div class="grow">
+                        <h2>Get Yesify</h2>
+                        <p>Free and open source. Windows 10 / 11, 64-bit. Your library stays on your PC in <code>%APPDATA%\Yesify</code>.</p>
+                    </div>
+                    <a class="pill" href="https://github.com/YesD3v/Yesify-Desktop-App/releases/latest/download/Yesify.exe">Download for Windows</a>
+                </div>
             </section>
 
         </div>
     </main>
 
-    <footer class="footer">
+    <footer>
         <div class="wrap">
             <span>&copy; <span id="year">2026</span> yes.dev</span>
-            <nav class="footer-links">
+            <nav>
                 <a href="https://discord.gg/P2DFbPX3Qh" target="_blank" rel="noopener noreferrer">Discord</a>
                 <a href="https://github.com/YesD3v/Yesify-Desktop-App" target="_blank" rel="noopener noreferrer">Source</a>
+                <a href="https://github.com/YesD3v/Yesify-Desktop-App/releases" target="_blank" rel="noopener noreferrer">Releases</a>
                 <a href="/">YesHub</a>
             </nav>
         </div>
@@ -172,6 +741,86 @@
             "https://api.github.com/repos/YesD3v/Yesify-Desktop-App/releases",
             name => name.toLowerCase().endsWith(".exe")
         );
+
+        (function () {
+            var still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+            // Sections ease in as they scroll into view.
+            var io = new IntersectionObserver(function (entries) {
+                entries.forEach(function (e) {
+                    if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+                });
+            }, { threshold: .12 });
+            document.querySelectorAll(".reveal").forEach(function (el) { io.observe(el); });
+
+            // The backdrop takes on a new "artwork" color now and then, like a new song starting.
+            var palettes = [
+                ["#c0123a", "#5b0f3f", "#2a1260"],
+                ["#2338b8", "#5a1fa6", "#0b5a8a"],
+                ["#0d7a6a", "#b8640f", "#3a1450"],
+                ["#b8146e", "#e05a22", "#2b0f4a"]
+            ];
+            var p = 0, root = document.documentElement;
+            function setPalette(i) {
+                root.style.setProperty("--a", palettes[i][0]);
+                root.style.setProperty("--b", palettes[i][1]);
+                root.style.setProperty("--c", palettes[i][2]);
+            }
+            if (!still) setInterval(function () { p = (p + 1) % palettes.length; setPalette(p); }, 9000);
+
+            // The mock window: the page loads in (skeleton → content), lyrics follow the song.
+            var win = document.getElementById("appWindow");
+            var lines = [
+                "City lights are humming low",
+                "Every window paints a glow",
+                "~",
+                "Drive until the morning comes",
+                "Static hearts and silver drums",
+                "Afterglow, afterglow",
+                "Take the long way, take it slow",
+                "We were made for streets like these",
+                "Afterglow, afterglow"
+            ];
+            var ol = document.getElementById("lyricLines");
+            lines.forEach(function (t) {
+                var li = document.createElement("li");
+                if (t === "~") { li.className = "brk"; li.innerHTML = '<span class="dots"><i></i><i></i><i></i></span>'; }
+                else li.textContent = t;
+                ol.appendChild(li);
+            });
+            var items = ol.children, active = -1, timer = null;
+            var fill = document.getElementById("seekFill"), now = document.getElementById("seekNow");
+
+            function step() {
+                if (active >= 0) { items[active].classList.remove("on"); items[active].classList.add("past"); }
+                active = (active + 1) % items.length;
+                if (active === 0) for (var i = 0; i < items.length; i++) items[i].classList.remove("past");
+                var li = items[active];
+                li.style.setProperty("--dur", (lines[active] === "~" ? 2.2 : 2.4 + lines[active].length * .02) + "s");
+                li.classList.add("on");
+                // Like the app: the line being sung sits about a third of the way down.
+                ol.style.transform = "translateY(" + (-li.offsetTop + ol.parentNode.clientHeight * .3) + "px)";
+                var secs = 48 + active * 14;
+                fill.style.width = (secs / 221 * 100) + "%";
+                now.textContent = Math.floor(secs / 60) + ":" + String(secs % 60).padStart(2, "0");
+                timer = setTimeout(step, lines[active] === "~" ? 2300 : 2700);
+            }
+
+            function play() {
+                if (still) { win.classList.add("loaded"); step(); clearTimeout(timer); return; }
+                win.classList.remove("loaded");
+                setTimeout(function () { win.classList.add("loaded"); }, 1700); // the page arrives
+                if (!timer) step();
+            }
+
+            // Run while the window is on screen; replay the page loading each time it comes back.
+            new IntersectionObserver(function (entries) {
+                entries.forEach(function (e) {
+                    if (e.isIntersecting) play();
+                    else { clearTimeout(timer); timer = null; }
+                });
+            }, { threshold: .35 }).observe(win);
+        })();
     </script>
 
 </body>
