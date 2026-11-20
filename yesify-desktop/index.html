@@ -297,10 +297,13 @@
             transition: transform .28s var(--ease), color .3s;
         }
         .lyrics li.past { color: rgba(255, 255, 255, .35); }
-        .lyrics li.on {
-            transform: scale(1);
+        .lyrics li.on { transform: scale(1); }
+        /* The sweep lives on an inline span: an inline background is laid out as if its wrapped rows
+           sat end to end, so a two-row line fills the top row first, then carries on into the second. */
+        .lyrics li.on .words {
             color: transparent;
-            background: linear-gradient(90deg, #fff 0 var(--p), rgba(255, 255, 255, .35) calc(var(--p) + 12%));
+            background: linear-gradient(90deg, #fff 0 var(--p), rgba(255, 255, 255, .35) calc(var(--p) + 8%));
+            -webkit-box-decoration-break: slice; box-decoration-break: slice;
             -webkit-background-clip: text; background-clip: text;
             animation: sweep var(--dur, 2.6s) linear forwards;
         }
@@ -309,7 +312,6 @@
         .dots { display: flex; gap: 7px; }
         .dots { padding: 6px 0; }
         .dots i { width: 9px; height: 9px; border-radius: 50%; background: rgba(255, 255, 255, .35); transition: background .4s, transform .4s var(--ease); }
-        .lyrics li.brk.on { background: none; color: inherit; }
         .lyrics li.brk.on .dots i { background: #fff; transform: translateY(-2px) scale(1.15); }
         .lyrics li.brk.on .dots i:nth-child(2) { transition-delay: .6s; }
         .lyrics li.brk.on .dots i:nth-child(3) { transition-delay: 1.2s; }
@@ -407,7 +409,7 @@
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
             .reveal { opacity: 1; transform: none; }
-            .lyrics li.on { color: #fff; background: none; }
+            .lyrics li.on .words { color: #fff; background: none; }
         }
     </style>
 </head>
@@ -756,7 +758,7 @@
             lines.forEach(function (t) {
                 var li = document.createElement("li");
                 if (t === "~") { li.className = "brk"; li.innerHTML = '<span class="dots"><i></i><i></i><i></i></span>'; }
-                else li.textContent = t;
+                else { var w = document.createElement("span"); w.className = "words"; w.textContent = t; li.appendChild(w); }
                 ol.appendChild(li);
             });
             var items = ol.children, active = -1, timer = null;
