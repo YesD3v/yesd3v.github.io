@@ -185,10 +185,11 @@
 
         /* ── Hero ─────────────────────────────────────────────────────────────────────────────────── */
 
-        .hero { padding: 54px 0 36px; }
+        .hero { padding: 54px 0 36px; display: grid; grid-template-columns: auto 1fr; gap: 34px; align-items: end; }
+        .hero-art { width: 196px; height: 196px; }
+        .hero-art img { width: 100%; height: 100%; object-fit: contain; }
         .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--subtle); }
-        .hero h1 { display: flex; align-items: center; gap: .18em; font-size: clamp(54px, 9vw, 96px); line-height: .95; font-weight: 800; letter-spacing: -.035em; margin: 8px 0 14px; }
-        .hero h1 img { width: .9em; height: .9em; object-fit: contain; flex: none; }
+        .hero h1 { font-size: clamp(54px, 9vw, 96px); line-height: .95; font-weight: 800; letter-spacing: -.035em; margin: 8px 0 14px; }
         .hero p.lead { font-size: 17px; color: var(--subtle); max-width: 620px; }
         .actions { display: flex; align-items: center; flex-wrap: wrap; gap: 14px 26px; margin-top: 26px; }
 
@@ -385,7 +386,8 @@
             .cards, .features { grid-template-columns: repeat(2, 1fr); }
         }
         @media (max-width: 760px) {
-            .hero { padding-top: 30px; }
+            .hero { grid-template-columns: 1fr; gap: 22px; padding-top: 30px; }
+            .hero-art { width: 132px; height: 132px; }
             .w-body { grid-template-columns: 1fr; height: 470px; }
             .w-side { display: none; }
             .row { grid-template-columns: 22px 34px 1fr 38px; }
@@ -472,9 +474,10 @@
 
             <!-- Hero, laid out like a page header in the app -->
             <section class="hero">
-                <div class="reveal">
+                <div class="hero-art reveal"><img src="/assets/Yesify-Desktop.png" alt="Yesify icon"></div>
+                <div class="reveal" style="--i:1">
                     <div class="eyebrow">Music player for Windows</div>
-                    <h1><img src="/assets/Yesify-Desktop.png" alt="">Yesify</h1>
+                    <h1>Yesify</h1>
                     <p class="lead">All of YouTube Music and your Spotify playlists in one native, glassy player. No account, no Premium, no ads, unlimited skips.</p>
                     <div class="actions">
                         <a class="btn" href="https://github.com/YesD3v/Yesify-Desktop-App/releases/latest/download/Yesify.exe">
