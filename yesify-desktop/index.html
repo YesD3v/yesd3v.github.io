@@ -147,48 +147,41 @@
         .app-name { font-size: 14px; font-weight: 600; color: var(--subtle); }
         .tb-back {
             display: inline-flex; align-items: center; gap: 6px;
-            padding: 6px 12px; border-radius: 999px;
+            padding: 6px 12px; border-radius: 8px;
             font-size: 13px; font-weight: 600; color: var(--subtle); text-decoration: none;
             transition: background .2s, color .2s;
         }
         .tb-back:hover { background: var(--raised); color: #fff; }
         .tb-spacer { flex: 1; }
 
-        /* ── Buttons (the app's pills and frosted play disc) ───────────────────────────────────────── */
+        /* ── Buttons ──────────────────────────────────────────────────────────────────────────────── */
 
-        .pill {
-            display: inline-flex; align-items: center; gap: 9px;
-            padding: 11px 20px; border-radius: 999px;
-            font: 600 14px/1 var(--font); color: #fff; text-decoration: none;
-            background: var(--raised); border: 1px solid transparent;
-            transition: background .2s, transform .15s var(--ease);
+        .btn {
+            display: inline-flex; align-items: center; gap: 10px;
+            padding: 13px 22px; border-radius: 10px;
+            font: 600 15px/1 var(--font); color: #160810; text-decoration: none;
+            background: #fff;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, .6);
+            transition: background .2s, transform .15s var(--ease), box-shadow .2s;
         }
-        .pill:hover { background: var(--hover); }
-        .pill:active { transform: scale(.96); }
-        .pill.ghost { background: transparent; border-color: var(--border); color: var(--subtle); }
-        .pill.ghost:hover { color: #fff; border-color: var(--border-strong); background: rgba(255, 255, 255, .06); }
-        .pill .icon { font-size: 17px; }
+        .btn:hover { background: rgba(255, 255, 255, .88); box-shadow: 0 14px 36px -10px rgba(0, 0, 0, .7); }
+        .btn:active { transform: scale(.97); }
+        .btn .icon { font-size: 18px; stroke-width: 2; }
 
-        .play-disc {
-            width: 58px; height: 58px; border-radius: 50%; flex: none;
-            display: grid; place-items: center;
-            background: rgba(255, 255, 255, .18); border: 1px solid rgba(255, 255, 255, .30);
-            -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
-            color: #fff; text-decoration: none;
-            transition: background .2s, transform .15s var(--ease);
+        .text-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 14px; font-weight: 500; color: var(--subtle); text-decoration: none;
+            transition: color .2s;
         }
-        .play-disc:hover { background: rgba(255, 255, 255, .26); transform: scale(1.04); }
-        .play-disc:active { transform: scale(.95); }
-        .play-disc svg { width: 24px; height: 24px; }
+        .text-link:hover { color: #fff; }
+        .text-link .arrow { transition: transform .2s var(--ease); }
+        .text-link:hover .arrow { transform: translateX(3px); }
 
-        .chip {
-            display: inline-flex; align-items: center; gap: 7px;
-            padding: 6px 12px; border-radius: 999px;
-            font-size: 12.5px; font-weight: 600; color: var(--subtle);
-            background: rgba(255, 255, 255, .07); border: 1px solid var(--border);
-        }
-        .chip strong { color: #fff; }
-        .chip .icon { font-size: 14px; }
+        /* Plain facts under the button, separated by thin dividers instead of boxed pills */
+        .meta { display: flex; flex-wrap: wrap; align-items: center; row-gap: 6px; margin-top: 20px; font-size: 13px; color: var(--faint); }
+        .meta > span { display: inline-flex; align-items: center; gap: 6px; }
+        .meta > span:not(:first-child)::before { content: ""; width: 1px; height: 12px; background: rgba(255, 255, 255, .22); margin: 0 12px; }
+        .meta strong { color: var(--subtle); font-weight: 600; }
 
         /* ── Hero ─────────────────────────────────────────────────────────────────────────────────── */
 
@@ -202,18 +195,7 @@
         .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--subtle); }
         .hero h1 { font-size: clamp(54px, 9vw, 96px); line-height: .95; font-weight: 800; letter-spacing: -.035em; margin: 8px 0 14px; }
         .hero p.lead { font-size: 17px; color: var(--subtle); max-width: 620px; }
-        .actions { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; margin-top: 24px; }
-        .meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
-
-        .new-badge {
-            display: inline-flex; align-items: center; gap: 8px; margin-bottom: 14px;
-            padding: 6px 14px 6px 8px; border-radius: 999px; text-decoration: none;
-            font-size: 13px; font-weight: 600; color: var(--subtle);
-            background: rgba(255, 255, 255, .08); border: 1px solid var(--border);
-            transition: background .2s, color .2s;
-        }
-        .new-badge b { padding: 2px 8px; border-radius: 999px; background: #fff; color: #1a0610; font-size: 11px; letter-spacing: .04em; }
-        .new-badge:hover { background: rgba(255, 255, 255, .14); color: #fff; }
+        .actions { display: flex; align-items: center; flex-wrap: wrap; gap: 14px 26px; margin-top: 26px; }
 
         /* ── The app, recreated ───────────────────────────────────────────────────────────────────── */
 
@@ -361,7 +343,7 @@
         .block-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
         .block-head h2 { font-size: 30px; font-weight: 800; letter-spacing: -.02em; }
         .block-head p { color: var(--subtle); font-size: 14px; margin-top: 2px; }
-        .see-all { font-size: 13px; font-weight: 600; color: var(--subtle); text-decoration: none; padding: 6px 12px; border-radius: 999px; white-space: nowrap; }
+        .see-all { font-size: 13px; font-weight: 600; color: var(--subtle); text-decoration: none; padding: 6px 12px; border-radius: 8px; white-space: nowrap; }
         .see-all:hover { color: #fff; background: var(--raised); }
 
         .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
@@ -379,13 +361,13 @@
 
         .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; counter-reset: step; }
         .step { padding: 22px; counter-increment: step; }
-        .step::before { content: counter(step); display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: #fff; color: #1a0610; font-weight: 800; font-size: 14px; margin-bottom: 14px; }
+        .step::before { content: counter(step, decimal-leading-zero); display: block; font-size: 13px; font-weight: 700; letter-spacing: .06em; color: var(--faint); margin-bottom: 10px; }
         .step > b { display: block; font-size: 15px; margin-bottom: 4px; }
         .step span b { color: #fff; font-weight: 600; }
         .step span { font-size: 13.5px; color: var(--subtle); }
         code { font-family: "Cascadia Code", Consolas, ui-monospace, monospace; font-size: .92em; padding: 1px 6px; border-radius: 6px; background: rgba(255, 255, 255, .1); }
 
-        .cta { padding: 34px; display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+        .cta { padding: 30px 34px; display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
         .cta h2 { font-size: 26px; font-weight: 800; letter-spacing: -.02em; }
         .cta p { color: var(--subtle); font-size: 14px; }
         .cta .grow { flex: 1; min-width: 240px; }
@@ -498,26 +480,20 @@
             <section class="hero">
                 <div class="hero-art reveal"><img src="/assets/Yesify-Desktop.png" alt="Yesify icon"></div>
                 <div class="reveal" style="--i:1">
-                    <a class="new-badge" id="releaseBadge" href="https://github.com/YesD3v/Yesify-Desktop-App/releases/latest" target="_blank" rel="noopener noreferrer">
-                        <b>NEW</b> <span id="releaseName">YouTube Music, Explore &amp; glass loading</span>
-                    </a>
                     <div class="eyebrow">Music player for Windows</div>
                     <h1>Yesify</h1>
                     <p class="lead">All of YouTube Music and your Spotify playlists in one native, glassy player. No account, no Premium, no ads, unlimited skips.</p>
                     <div class="actions">
-                        <a class="play-disc" href="https://github.com/YesD3v/Yesify-Desktop-App/releases/latest/download/Yesify.exe" aria-label="Download Yesify.exe">
-                            <svg class="icon"><use href="#i-down"/></svg>
+                        <a class="btn" href="https://github.com/YesD3v/Yesify-Desktop-App/releases/latest/download/Yesify.exe">
+                            <svg class="icon"><use href="#i-down"/></svg> Download for Windows
                         </a>
-                        <a class="pill" href="https://github.com/YesD3v/Yesify-Desktop-App/releases/latest/download/Yesify.exe">Download for Windows</a>
-                        <a class="pill ghost" href="https://github.com/YesD3v/Yesify-Desktop-App" target="_blank" rel="noopener noreferrer">
-                            <svg class="icon"><use href="#i-code"/></svg> View source
-                        </a>
+                        <a class="text-link" href="#whats-new">What's new: YouTube Music &amp; Explore <span class="arrow">&rarr;</span></a>
                     </div>
                     <div class="meta">
-                        <span class="chip" id="dlChip" hidden><svg class="icon"><use href="#i-down"/></svg><strong id="dlCount">-</strong> downloads</span>
-                        <span class="chip">Yesify.exe &middot; 162 MB</span>
-                        <span class="chip">Windows 10 / 11 (64-bit)</span>
-                        <span class="chip">Free &amp; open source</span>
+                        <span>Free &amp; open source</span>
+                        <span>Windows 10 / 11, 64-bit</span>
+                        <span>162 MB</span>
+                        <span id="dlChip" hidden><strong id="dlCount">-</strong>&nbsp;downloads</span>
                     </div>
                 </div>
             </section>
@@ -641,7 +617,7 @@
             </section>
 
             <!-- What's new -->
-            <section class="block">
+            <section class="block" id="whats-new" style="scroll-margin-top:72px">
                 <div class="block-head reveal">
                     <div>
                         <h2>New in this version</h2>
@@ -711,12 +687,11 @@
 
             <section class="block">
                 <div class="glass cta reveal">
-                    <a class="play-disc" href="https://github.com/YesD3v/Yesify-Desktop-App/releases/latest/download/Yesify.exe" aria-label="Download Yesify.exe"><svg class="icon"><use href="#i-down"/></svg></a>
                     <div class="grow">
                         <h2>Get Yesify</h2>
-                        <p>Free and open source. Windows 10 / 11, 64-bit. Your library stays on your PC in <code>%APPDATA%\Yesify</code>.</p>
+                        <p>Your library stays on your PC in <code>%APPDATA%\Yesify</code>.</p>
                     </div>
-                    <a class="pill" href="https://github.com/YesD3v/Yesify-Desktop-App/releases/latest/download/Yesify.exe">Download for Windows</a>
+                    <a class="btn" href="https://github.com/YesD3v/Yesify-Desktop-App/releases/latest/download/Yesify.exe"><svg class="icon"><use href="#i-down"/></svg> Download</a>
                 </div>
             </section>
 
