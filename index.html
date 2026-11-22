@@ -15,15 +15,15 @@
     <meta property="og:url"          content="https://yesd3v.github.io">
     <meta property="og:title"        content="YesHub">
     <meta property="og:description"  content="Scripts, tools &amp; executors by yes.dev">
-    <meta property="og:image"        content="https://yesd3v.github.io/assets/YesHub.png">
-    <meta property="og:image:width"  content="512">
-    <meta property="og:image:height" content="512">
+    <meta property="og:image"        content="https://yesd3v.github.io/assets/YesHub-Banner.png">
+    <meta property="og:image:width"  content="1280">
+    <meta property="og:image:height" content="640">
 
     <!-- Twitter card -->
-    <meta name="twitter:card"        content="summary">
+    <meta name="twitter:card"        content="summary_large_image">
     <meta name="twitter:title"       content="YesHub">
     <meta name="twitter:description" content="Scripts, tools &amp; executors by yes.dev">
-    <meta name="twitter:image"       content="https://yesd3v.github.io/assets/YesHub.png">
+    <meta name="twitter:image"       content="https://yesd3v.github.io/assets/YesHub-Banner.png">
 
     <meta name="description" content="Scripts, tools &amp; executors by yes.dev">
 
@@ -36,76 +36,45 @@
         /* ── Hero ────────────────────────────────────────────────── */
 
         .hero {
-            padding: 88px 0 64px;
-            text-align: center;
-            user-select: none;
-        }
-
-        .hero-badge {
-            display: inline-flex;
+            min-height: calc(100vh - 90px);
+            min-height: calc(100svh - 90px);
+            display: grid;
+            grid-template-columns: 1.15fr .85fr;
             align-items: center;
-            gap: 8px;
-            padding: 6px 14px;
-            font-size: 12.5px;
-            font-weight: 600;
-            color: var(--text-2);
-            border: 1px solid var(--border);
-            border-radius: 999px;
-            background: rgba(10,10,11,.6);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            grid-template-rows: 1fr auto;
+            gap: 24px 48px;
+            padding: 40px 0 72px;
         }
 
-        .hero-badge::before {
-            content: "";
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: #fff;
-            box-shadow: 0 0 8px rgba(255,255,255,.8);
-        }
-
-        /* Wordmark: hex logo + gradient "YesHub" with a slow shine */
+        .hero-copy { user-select: none; }
 
         .hero h1 {
-            margin-top: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: .22em;
             font-family: var(--font-display);
-            font-size: clamp(3.6rem, 10vw, 7.5rem);
-            line-height: 1;
+            font-size: clamp(2.4rem, 4.5vw, 3.9rem);
+            line-height: 1.04;
             font-weight: 700;
             letter-spacing: -.045em;
         }
 
-        .hero-logo {
-            width: .82em;
-            height: .82em;
-            filter:
-                drop-shadow(0 0 10px rgba(255,255,255,.35))
-                drop-shadow(0 0 30px rgba(255,255,255,.15));
-            animation: logo-spin 24s linear infinite;
-        }
+        .hero h1 .line { display: block; white-space: nowrap; }
 
-        @keyframes logo-spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .hero-word {
-            padding: 0 .04em .08em 0;
+        .hero h1 .dim {
+            padding-bottom: .06em;
             background:
-                linear-gradient(110deg, transparent 38%, rgba(255,255,255,.95) 50%, transparent 62%),
-                linear-gradient(180deg, #fff 25%, #9a9a9f 110%);
+                linear-gradient(110deg, transparent 38%, rgba(255,255,255,.9) 50%, transparent 62%),
+                linear-gradient(180deg, #8d8d93 0%, #4a4a50 120%);
             background-size: 250% 100%, 100% 100%;
             background-repeat: no-repeat;
             background-position: 150% 0, 0 0;
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            filter: drop-shadow(0 0 24px rgba(255,255,255,.18));
-            animation: shine 7s var(--ease) 1.2s infinite;
+            animation: shine 7s var(--ease) 1.4s infinite;
+        }
+
+        .hero h1 .bright {
+            color: #fff;
+            text-shadow: 0 0 40px rgba(255,255,255,.18);
         }
 
         @keyframes shine {
@@ -114,42 +83,271 @@
             100%    { background-position: -50% 0, 0 0; }
         }
 
-        .hero p {
-            margin: 22px auto 0;
-            max-width: 460px;
+        .hero-lede {
+            margin-top: 26px;
+            max-width: 430px;
             font-size: 17px;
+            line-height: 1.6;
             color: var(--text-2);
         }
 
         .hero-actions {
-            margin-top: 34px;
+            margin-top: 36px;
             display: flex;
             flex-wrap: wrap;
-            justify-content: center;
+            align-items: center;
             gap: 12px;
         }
 
-        .btn-discord {
+        .cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            height: 50px;
+            padding: 0 8px 0 24px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #000;
+            text-decoration: none;
+            background: #fff;
+            border-radius: 999px;
+            box-shadow: 0 0 0 1px rgba(255,255,255,.5), 0 10px 40px rgba(255,255,255,.14);
+            transition: box-shadow .3s ease, transform .3s var(--ease);
+        }
+
+        .cta-dot {
+            width: 36px;
+            height: 36px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: #000;
             color: #fff;
-            background: var(--discord);
-            box-shadow: 0 8px 30px rgba(88,101,242,.35);
+            font-size: 16px;
+            transition: transform .3s var(--ease);
         }
 
-        .btn-discord:hover {
-            background: #4752e0;
-            box-shadow: 0 10px 40px rgba(88,101,242,.5);
+        .cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 0 1px rgba(255,255,255,.6), 0 14px 50px rgba(255,255,255,.24);
         }
 
-        .divider {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,.18) 15%, rgba(255,255,255,.42) 50%, rgba(255,255,255,.18) 85%, transparent);
-            box-shadow: 0 0 15px rgba(255,255,255,.07);
+        .cta:hover .cta-dot { transform: translateY(2px); }
+
+        .cta-ghost {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            height: 50px;
+            padding: 0 22px;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text);
+            text-decoration: none;
+            border-radius: 999px;
+            background: rgba(255,255,255,.04);
+            border: 1px solid var(--border-strong);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: background .25s ease, border-color .25s ease, transform .3s var(--ease);
         }
 
-        /* ── Section header with link ────────────────────────────── */
+        .cta-ghost .icon {
+            font-size: 19px;
+            color: #8b95ff;
+        }
+
+        .cta-ghost:hover {
+            transform: translateY(-2px);
+            background: rgba(88,101,242,.12);
+            border-color: rgba(88,101,242,.55);
+        }
+
+        /* App icon dock */
+
+        .dock {
+            margin-top: 44px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dock-label {
+            margin-right: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-3);
+        }
+
+        .dock-item {
+            position: relative;
+            width: 44px;
+            height: 44px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: linear-gradient(160deg, #19191c, #0a0a0b);
+            border: 1px solid var(--border-strong);
+            transition: transform .3s var(--ease), border-color .3s ease, box-shadow .3s ease;
+        }
+
+        .dock-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 11px;
+        }
+
+        .dock-item.inset img {
+            width: 62%;
+            height: 62%;
+            object-fit: contain;
+        }
+
+        .dock-item:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255,255,255,.4);
+            box-shadow: 0 0 20px rgba(255,255,255,.12), 0 12px 26px rgba(0,0,0,.5);
+        }
+
+        .dock-item[data-tip]::after {
+            content: attr(data-tip);
+            position: absolute;
+            left: 50%;
+            bottom: calc(100% + 10px);
+            translate: -50% 4px;
+            padding: 4px 10px;
+            font-size: 11.5px;
+            font-weight: 600;
+            white-space: nowrap;
+            color: var(--text);
+            background: #111113;
+            border: 1px solid var(--border-strong);
+            border-radius: 8px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .2s ease, translate .2s var(--ease);
+        }
+
+        .dock-item:hover::after { opacity: 1; translate: -50% 0; }
+
+        .dock-item.off img { filter: grayscale(1) brightness(.5); }
+
+        /* Fanned banner stack */
+
+        .hero-art {
+            position: relative;
+            aspect-ratio: 1 / .92;
+            perspective: 1400px;
+        }
+
+        .hero-art::before {
+            content: "";
+            position: absolute;
+            inset: 10% 5%;
+            background: radial-gradient(closest-side, rgba(255,255,255,.12), transparent);
+            filter: blur(20px);
+            pointer-events: none;
+        }
+
+        .stack-card {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 78%;
+            aspect-ratio: 2 / 1;
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,.14);
+            box-shadow: inset 0 1px rgba(255,255,255,.08), 0 30px 80px rgba(0,0,0,.7);
+            transform-style: preserve-3d;
+            transition: transform .7s var(--ease), border-color .3s ease, box-shadow .3s ease;
+        }
+
+        .stack-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .stack-card.c1 { z-index: 1; transform: translate(-62%, -105%) rotate(-7deg); }
+        .stack-card.c2 { z-index: 2; transform: translate(-38%, -50%) rotate(5deg); }
+        .stack-card.c3 { z-index: 3; transform: translate(-56%, 6%) rotate(-2deg); }
+
+        .stack-card.c1 img { filter: brightness(.7); }
+        .stack-card.c2 img { filter: brightness(.85); }
+
+        .hero-art:hover .stack-card.c1 { transform: translate(-70%, -118%) rotate(-10deg); }
+        .hero-art:hover .stack-card.c2 { transform: translate(-30%, -50%) rotate(7deg); }
+        .hero-art:hover .stack-card.c3 { transform: translate(-58%, 14%) rotate(-3deg); }
+
+        .stack-card:hover {
+            border-color: rgba(255,255,255,.4);
+            box-shadow: inset 0 1px rgba(255,255,255,.1), 0 0 40px rgba(255,255,255,.1), 0 30px 80px rgba(0,0,0,.7);
+        }
+
+        .stack-card:hover img { filter: none; }
+
+        .float {
+            position: absolute;
+            inset: 0;
+            animation: float-y 7s ease-in-out infinite;
+        }
+
+        @keyframes float-y {
+            0%, 100% { translate: 0 0; }
+            50%      { translate: 0 -10px; }
+        }
+
+        .scroll-hint {
+            grid-column: 1 / -1;
+            justify-self: center;
+            margin-top: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .22em;
+            text-transform: uppercase;
+            color: var(--text-2);
+            text-decoration: none;
+            transition: color .25s ease;
+        }
+
+        .scroll-hint:hover { color: var(--text); }
+
+        .scroll-line {
+            position: relative;
+            width: 1px;
+            height: 48px;
+            overflow: hidden;
+            background: rgba(255,255,255,.22);
+        }
+
+        .scroll-line::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: -40%;
+            width: 1px;
+            height: 40%;
+            background: linear-gradient(to bottom, transparent, #fff);
+            box-shadow: 0 0 8px rgba(255,255,255,.8);
+            animation: scroll-drop 2s var(--ease) infinite;
+        }
+
+        @keyframes scroll-drop {
+            0%   { top: -40%; }
+            100% { top: 100%; }
+        }
+
+        /* ── Sections ────────────────────────────────────────────── */
 
         .home-section {
-            margin-top: 56px;
+            margin-top: 72px;
+            scroll-margin-top: 90px;
         }
 
         .section-head {
@@ -157,19 +355,28 @@
             align-items: flex-end;
             justify-content: space-between;
             gap: 16px;
-            margin-bottom: 18px;
+            margin-bottom: 22px;
+        }
+
+        .eyebrow {
+            font-size: 11.5px;
+            font-weight: 700;
+            letter-spacing: .16em;
+            text-transform: uppercase;
+            color: var(--text-3);
         }
 
         .section-head h2 {
+            margin-top: 4px;
             font-family: var(--font-display);
-            font-size: 22px;
+            font-size: clamp(24px, 3.4vw, 30px);
             font-weight: 700;
-            letter-spacing: -.01em;
+            letter-spacing: -.02em;
         }
 
         .section-head p {
-            margin-top: 2px;
-            font-size: 13.5px;
+            margin-top: 4px;
+            font-size: 14px;
             color: var(--text-3);
         }
 
@@ -187,99 +394,227 @@
 
         .section-link:hover { color: var(--text); }
 
-        /* ── Product cards ───────────────────────────────────────── */
+        /* ── Featured app ────────────────────────────────────────── */
 
-        .products {
+        .featured {
             display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-template-columns: 1.25fr 1fr;
+            overflow: hidden;
+            color: var(--text);
+            text-decoration: none;
+            transition: border-color .3s ease, box-shadow .3s ease, transform .3s var(--ease);
+        }
+
+        .featured:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255,255,255,.24);
+            box-shadow: inset 0 1px rgba(255,255,255,.06), 0 0 40px rgba(255,255,255,.05), 0 30px 70px rgba(0,0,0,.55);
+        }
+
+        .featured-art {
+            position: relative;
+            min-height: 300px;
+            overflow: hidden;
+            border-right: 1px solid var(--border);
+        }
+
+        .featured-art img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform .8s var(--ease);
+        }
+
+        .featured:hover .featured-art img { transform: scale(1.04); }
+
+        .featured-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 16px;
+            padding: 36px;
+        }
+
+        .featured-title {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .featured-title h3 {
+            font-family: var(--font-display);
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -.02em;
+            line-height: 1.1;
+        }
+
+        .featured-title span {
+            display: block;
+            font-size: 13px;
+            color: var(--text-3);
+        }
+
+        .featured-body p {
+            font-size: 15px;
+            color: var(--text-2);
+        }
+
+        .featured-body .btn { align-self: flex-start; }
+
+        /* ── App icon tile (shared by cards) ─────────────────────── */
+
+        .app-icon {
+            width: 64px;
+            height: 64px;
+            flex-shrink: 0;
+            border-radius: 17px;
+            overflow: hidden;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(160deg, #19191c, #0a0a0b);
+            border: 1px solid var(--border-strong);
+            box-shadow: 0 10px 30px rgba(0,0,0,.6), inset 0 1px rgba(255,255,255,.06);
+        }
+
+        .app-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .app-icon.inset img {
+            width: 64%;
+            height: 64%;
+            object-fit: contain;
+        }
+
+        /* ── App cards ───────────────────────────────────────────── */
+
+        .apps {
+            margin-top: 18px;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 18px;
         }
 
-        .product-card {
+        .app-card {
             display: flex;
             flex-direction: column;
-            padding: 24px;
+            overflow: hidden;
             color: var(--text);
             text-decoration: none;
-            overflow: hidden;
-            transition:
-                transform .3s var(--ease),
-                border-color .3s ease,
-                box-shadow .3s ease;
+            transition: transform .3s var(--ease), border-color .3s ease, box-shadow .3s ease;
         }
 
-        .product-card::before {
+        .app-card::before {
             content: "";
             position: absolute;
             inset: 0;
+            z-index: 2;
             border-radius: inherit;
-            background: radial-gradient(400px circle at var(--mx, 50%) var(--my, 0%), rgba(255,255,255,.07), transparent 45%);
+            background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), rgba(255,255,255,.06), transparent 45%);
             opacity: 0;
             transition: opacity .3s ease;
             pointer-events: none;
         }
 
-        .product-card:hover {
+        a.app-card:hover {
             transform: translateY(-4px);
             border-color: rgba(255,255,255,.24);
-            box-shadow:
-                inset 0 1px rgba(255,255,255,.06),
-                0 0 30px rgba(255,255,255,.05),
-                0 30px 70px rgba(0,0,0,.55);
+            box-shadow: inset 0 1px rgba(255,255,255,.06), 0 0 30px rgba(255,255,255,.05), 0 30px 70px rgba(0,0,0,.55);
         }
 
-        .product-card:hover::before { opacity: 1; }
+        a.app-card:hover::before { opacity: 1; }
 
-        .product-card-top {
+        .app-banner {
+            position: relative;
+            aspect-ratio: 2 / 1;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border);
+            background: #0a0a0b;
+        }
+
+        .app-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform .8s var(--ease);
+        }
+
+        a.app-card:hover .app-banner img { transform: scale(1.05); }
+
+        .app-banner::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(10,10,11,.75), transparent 45%);
+        }
+
+        .app-body {
+            position: relative;
+            flex: 1;
             display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
+            flex-direction: column;
+            padding: 0 22px 20px;
         }
 
-        .product-card-icon {
-            width: 60px;
-            height: 60px;
-            display: grid;
-            place-items: center;
-            border-radius: 16px;
-            background: linear-gradient(160deg, rgba(255,255,255,.08), rgba(0,0,0,.4));
-            border: 1px solid var(--border-strong);
+        .app-body .app-icon {
+            margin-top: -34px;
+            position: relative;
+            z-index: 1;
         }
 
-        .product-card-icon img {
-            width: 38px;
-            height: 38px;
-            object-fit: contain;
-        }
-
-        .product-card-arrow {
-            font-size: 20px;
-            color: var(--text-3);
-            transition: transform .3s var(--ease), color .3s ease;
-        }
-
-        .product-card:hover .product-card-arrow {
-            color: var(--text);
-            transform: translate(3px, -3px);
-        }
-
-        .product-card h3 {
-            margin-top: 22px;
-            font-size: 18px;
+        .app-body h3 {
+            margin-top: 14px;
+            font-size: 19px;
             font-weight: 700;
+            letter-spacing: -.01em;
         }
 
-        .product-card p {
-            margin-top: 6px;
+        .app-body p {
+            margin-top: 4px;
             flex: 1;
             font-size: 14px;
             color: var(--text-3);
         }
 
-        .product-card .chip {
-            align-self: flex-start;
+        .app-foot {
             margin-top: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
+
+        .app-cta {
+            margin-left: auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-2);
+            transition: color .2s ease;
+        }
+
+        .app-cta .icon { transition: transform .3s var(--ease); }
+
+        a.app-card:hover .app-cta { color: var(--text); }
+        a.app-card:hover .app-cta .icon { transform: translate(3px, -3px); }
+
+        /* Unavailable project: no link, dimmed, labelled */
+
+        .app-card.is-off { cursor: not-allowed; }
+
+        .app-card.is-off .app-banner img,
+        .app-card.is-off .app-icon img { filter: grayscale(1) brightness(.5); }
+
+        .app-card.is-off h3,
+        .app-card.is-off p { opacity: .55; }
+
+        .app-card.is-off .app-cta { color: var(--text-3); }
 
         /* ── Community cards ─────────────────────────────────────── */
 
@@ -292,43 +627,50 @@
         .community-card {
             --c: 255,255,255;
             display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 18px 20px;
+            flex-direction: column;
+            gap: 18px;
+            padding: 22px;
+            overflow: hidden;
             color: var(--text);
             text-decoration: none;
-            border-color: rgba(var(--c), .22);
-            transition:
-                transform .3s var(--ease),
-                border-color .3s ease,
-                box-shadow .3s ease,
-                background .3s ease;
+            transition: transform .3s var(--ease), border-color .3s ease, box-shadow .3s ease, background .3s ease;
+        }
+
+        .community-card::after {
+            content: "";
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: radial-gradient(closest-side, rgba(var(--c), .18), transparent);
+            pointer-events: none;
         }
 
         .community-card:hover {
             transform: translateY(-3px);
-            border-color: rgba(var(--c), .6);
-            background:
-                linear-gradient(160deg, rgba(var(--c), .09), rgba(255,255,255,.01) 50%, rgba(0,0,0,.3)),
-                var(--panel);
-            box-shadow:
-                inset 0 1px rgba(255,255,255,.05),
-                0 0 26px rgba(var(--c), .12),
-                0 26px 60px rgba(0,0,0,.5);
+            border-color: rgba(var(--c), .55);
+            box-shadow: inset 0 1px rgba(255,255,255,.05), 0 0 26px rgba(var(--c), .12), 0 26px 60px rgba(0,0,0,.5);
         }
 
         .community-card.discord    { --c: 88,101,242; }
         .community-card.scriptblox { --c: 139,92,246; }
 
+        .community-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
         .community-icon {
-            width: 48px;
-            height: 48px;
-            flex-shrink: 0;
+            width: 50px;
+            height: 50px;
             display: grid;
             place-items: center;
-            border-radius: 13px;
-            background: rgba(0,0,0,.4);
-            border: 1px solid rgba(var(--c), .25);
+            border-radius: 14px;
+            background: rgba(var(--c), .1);
+            border: 1px solid rgba(var(--c), .3);
             font-size: 26px;
         }
 
@@ -341,21 +683,23 @@
         }
 
         .community-title {
-            font-size: 15.5px;
+            font-size: 16px;
             font-weight: 700;
         }
 
         .community-subtitle {
-            font-size: 13px;
+            margin-top: 2px;
+            font-size: 13.5px;
             color: var(--text-3);
         }
 
-        .community-card .product-card-arrow {
-            margin-left: auto;
+        .card-arrow {
             font-size: 18px;
+            color: var(--text-3);
+            transition: transform .3s var(--ease), color .3s ease;
         }
 
-        .community-card:hover .product-card-arrow {
+        .community-card:hover .card-arrow {
             color: var(--text);
             transform: translate(3px, -3px);
         }
@@ -395,19 +739,13 @@
             overflow: hidden;
             color: var(--text);
             text-decoration: none;
-            transition:
-                transform .3s var(--ease),
-                border-color .3s ease,
-                box-shadow .3s ease;
+            transition: transform .3s var(--ease), border-color .3s ease, box-shadow .3s ease;
         }
 
         .script-card:hover {
             transform: translateY(-4px);
             border-color: rgba(139,92,246,.5);
-            box-shadow:
-                inset 0 1px rgba(255,255,255,.05),
-                0 0 26px rgba(139,92,246,.14),
-                0 30px 70px rgba(0,0,0,.55);
+            box-shadow: inset 0 1px rgba(255,255,255,.05), 0 0 26px rgba(139,92,246,.14), 0 30px 70px rgba(0,0,0,.55);
         }
 
         .script-thumb {
@@ -506,8 +844,6 @@
             color: #fca5a5;
         }
 
-        /* Skeletons */
-
         .skeleton .script-thumb,
         .skeleton .sk-line {
             background: linear-gradient(90deg, rgba(255,255,255,.03) 25%, rgba(255,255,255,.07) 50%, rgba(255,255,255,.03) 75%);
@@ -530,57 +866,79 @@
         /* ── Responsive ──────────────────────────────────────────── */
 
         @media (max-width: 900px) {
-            .products,
-            .community { grid-template-columns: 1fr; }
-
-            .product-card {
-                flex-direction: row;
-                align-items: center;
-                gap: 18px;
-                padding: 18px;
+            .hero {
+                min-height: 0;
+                grid-template-columns: 1fr;
+                grid-template-rows: none;
+                padding-top: 32px;
             }
 
-            .product-card-top { display: contents; }
+            .hero-art {
+                order: -1;
+                width: min(100%, 520px);
+                justify-self: center;
+                aspect-ratio: 1 / .62;
+            }
 
-            .product-card-icon { flex-shrink: 0; }
+            .stack-card { width: 70%; }
 
-            .product-card-body { order: 1; flex: 1; min-width: 0; }
+            .stack-card.c1 { transform: translate(-66%, -82%) rotate(-7deg); }
+            .stack-card.c2 { transform: translate(-34%, -50%) rotate(5deg); }
+            .stack-card.c3 { transform: translate(-56%, -14%) rotate(-2deg); }
 
-            .product-card-arrow { order: 2; }
+            .scroll-hint { display: none; }
 
-            .product-card h3 { margin-top: 0; }
+            .featured { grid-template-columns: 1fr; }
 
-            .product-card p { font-size: 13.5px; }
+            .featured-art {
+                min-height: 0;
+                aspect-ratio: 2 / 1;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
 
-            .product-card .chip { margin-top: 10px; }
+            .featured-body { padding: 26px; }
+
+            .community { grid-template-columns: 1fr; }
+
+            .community-card {
+                flex-direction: row-reverse;
+                align-items: center;
+                justify-content: flex-end;
+                padding: 18px 20px;
+            }
+
+            .community-top { display: contents; }
+
+            .community-card .card-arrow { margin-left: auto; order: -1; }
 
             .scripts-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
 
+        @media (max-width: 680px) {
+            .apps { grid-template-columns: 1fr; }
+        }
+
         @media (max-width: 600px) {
-            .hero { padding: 56px 0 44px; }
+            .hero { padding: 24px 0 48px; }
 
-            .hero h1 { font-size: clamp(3rem, 15vw, 4.2rem); }
+            .hero h1 { font-size: clamp(2.2rem, 10.5vw, 2.9rem); }
 
-            .hero p { font-size: 15.5px; }
+            .hero h1 .line { white-space: normal; }
 
-            .hero-actions .btn {
-                flex: 1 1 150px;
-                padding-inline: 16px;
-            }
+            .hero-lede { font-size: 15.5px; }
 
-            .home-section { margin-top: 44px; }
+            .cta, .cta-ghost { flex: 1 1 auto; justify-content: center; }
 
-            .product-card-icon {
-                width: 52px;
-                height: 52px;
-                border-radius: 14px;
-            }
+            .dock { gap: 8px; }
 
-            .product-card-icon img {
-                width: 32px;
-                height: 32px;
-            }
+            .dock-item { width: 42px; height: 42px; }
+
+            .home-section { margin-top: 52px; }
+
+            .featured-title h3 { font-size: 24px; }
+
+            .featured-body .btn { align-self: stretch; }
 
             .scripts-grid {
                 grid-template-columns: 1fr;
@@ -601,10 +959,7 @@
 
             .script-body { padding: 12px 14px; }
 
-            .script-title {
-                font-size: 14px;
-                -webkit-line-clamp: 2;
-            }
+            .script-title { font-size: 14px; }
         }
 
         @media (max-width: 380px) {
@@ -635,106 +990,155 @@
         <symbol id="i-github" viewBox="0 0 24 24"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55v-2.16c-3.2.7-3.87-1.54-3.87-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.25 3.34.95.1-.74.4-1.25.73-1.54-2.55-.29-5.23-1.28-5.23-5.69 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.47.11-3.06 0 0 .96-.31 3.15 1.18a10.9 10.9 0 0 1 5.74 0c2.19-1.49 3.15-1.18 3.15-1.18.62 1.59.23 2.77.11 3.06.73.81 1.18 1.84 1.18 3.1 0 4.42-2.69 5.39-5.25 5.68.41.35.78 1.04.78 2.1v3.11c0 .3.21.66.79.55A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></symbol>
         <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
         <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+        <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
     </svg>
+
+    <!-- Top navigation -->
+    <header class="topbar">
+        <div class="wrap">
+            <a class="wordmark" href="/"><img src="/assets/YesHub.png" alt="">YesHub</a>
+            <nav class="nav-links">
+                <a href="#projects">Projects</a>
+                <a href="#community">Community</a>
+                <a href="#scripts">Scripts</a>
+                <a class="nav-cta" href="https://discord.gg/P2DFbPX3Qh" target="_blank" rel="noopener noreferrer">
+                    <svg class="icon icon-fill"><use href="#i-discord"/></svg>
+                    Discord
+                </a>
+            </nav>
+        </div>
+    </header>
 
     <main class="wrap" style="flex:1">
 
         <!-- Hero -->
-        <header class="hero">
-            <div class="hero-badge reveal" style="--i:0">
-                Scripts, tools &amp; executors by yes.dev
+        <section class="hero">
+            <div class="hero-copy">
+                <h1>
+                    <span class="line reveal" style="--i:0"><span class="dim">Free apps &amp; tools,</span></span>
+                    <span class="line reveal" style="--i:1"><span class="bright">made by yes.dev.</span></span>
+                </h1>
+
+                <p class="hero-lede reveal" style="--i:2">Open-source apps, extensions and scripts. Free to use, built in the open and shared with the community.</p>
+
+                <div class="hero-actions reveal" style="--i:3">
+                    <a class="cta" href="#projects">
+                        Explore projects
+                        <span class="cta-dot"><svg class="icon icon-stroke" viewBox="0 0 24 24"><path d="M12 5v14m0 0-6-6m6 6 6-6"/></svg></span>
+                    </a>
+                    <a class="cta-ghost" href="https://discord.gg/P2DFbPX3Qh" target="_blank" rel="noopener noreferrer">
+                        <svg class="icon icon-fill"><use href="#i-discord"/></svg>
+                        Discord
+                    </a>
+                </div>
+
+                <nav class="dock reveal" style="--i:4" aria-label="Apps">
+                    <a class="dock-item" href="/yesify-desktop" data-tip="Yesify Desktop"><img src="/assets/Yesify-Desktop.png" alt="Yesify Desktop"></a>
+                    <a class="dock-item inset" href="/yesify" data-tip="Yesify"><img src="/assets/Yesify.png" alt="Yesify"></a>
+                    <a class="dock-item inset" href="/yex" data-tip="Yex Executor"><img src="/assets/Yex.png" alt="Yex Executor"></a>
+                    <a class="dock-item" href="/YesClient/" data-tip="YesClient"><img src="/assets/YesClient.png" alt="YesClient"></a>
+                    <span class="dock-item off" data-tip="Based Client &middot; unavailable"><img src="/assets/Based.png" alt="Based Client (unavailable)"></span>
+                </nav>
             </div>
 
-            <h1 class="reveal" style="--i:1" aria-label="YesHub">
-                <img class="hero-logo" src="/assets/YesHub.png" alt="">
-                <span class="hero-word">YesHub</span>
-            </h1>
-
-            <p class="reveal" style="--i:2">Free apps, extensions and Roblox scripts - built and maintained by yes.dev.</p>
-
-            <div class="hero-actions reveal" style="--i:3">
-                <a class="btn btn-discord" href="https://discord.gg/P2DFbPX3Qh" target="_blank" rel="noopener noreferrer">
-                    <svg class="icon icon-fill"><use href="#i-discord"/></svg>
-                    Join the Discord
-                </a>
-                <a class="btn btn-ghost" href="#projects">
-                    Browse projects
-                </a>
-            </div>
-        </header>
-
-        <div class="divider"></div>
-
-        <!-- Projects -->
-        <section class="home-section" id="projects">
-            <div class="section-head reveal" style="--i:4">
-                <div>
-                    <h2>Projects</h2>
-                    <p>Downloads for everything yes.dev ships.</p>
+            <div class="hero-art reveal" style="--i:2" aria-hidden="true">
+                <div class="float">
+                    <a class="stack-card c1" href="/YesClient/" tabindex="-1"><img src="/assets/YesClient-Banner.png" alt=""></a>
+                    <a class="stack-card c2" href="/yex" tabindex="-1"><img src="/assets/Yex-Banner.png" alt=""></a>
+                    <a class="stack-card c3" href="/yesify-desktop" tabindex="-1"><img src="/assets/Yesify-Banner.png" alt=""></a>
                 </div>
             </div>
 
-            <div class="products">
+            <a class="scroll-hint" href="#projects">Scroll<span class="scroll-line"></span></a>
+        </section>
 
-                <a class="panel product-card reveal" style="--i:5" href="/yesify-desktop">
-                    <div class="product-card-top">
-                        <div class="product-card-icon"><img src="/assets/Yesify-Desktop.png" alt=""></div>
-                        <svg class="icon product-card-arrow"><use href="#i-arrow"/></svg>
-                    </div>
-                    <div class="product-card-body">
-                        <h3>Yesify Desktop</h3>
-                        <p>Free native music player for Windows. Paste a Spotify link and play.</p>
-                        <span class="chip">Windows app</span>
-                    </div>
-                </a>
+        <!-- Projects -->
+        <section class="home-section" id="projects">
+            <div class="section-head reveal" style="--i:5">
+                <div>
+                    <div class="eyebrow">Projects</div>
+                    <h2>Everything yes.dev ships</h2>
+                    <p>Free downloads, no accounts.</p>
+                </div>
+            </div>
 
-                <a class="panel product-card reveal" style="--i:6" href="/yesify">
-                    <div class="product-card-top">
-                        <div class="product-card-icon"><img src="/assets/Yesify.png" alt=""></div>
-                        <svg class="icon product-card-arrow"><use href="#i-arrow"/></svg>
+            <!-- Featured -->
+            <a class="panel featured reveal" style="--i:6" href="/yesify-desktop">
+                <div class="featured-art">
+                    <img src="/assets/Yesify-Banner.png" alt="Yesify Desktop">
+                </div>
+                <div class="featured-body">
+                    <div class="featured-title">
+                        <div class="app-icon"><img src="/assets/Yesify-Desktop.png" alt=""></div>
+                        <div>
+                            <h3>Yesify Desktop</h3>
+                            <span>Windows app</span>
+                        </div>
                     </div>
-                    <div class="product-card-body">
+                    <p>Free native music player for Windows. Paste a Spotify link and play.</p>
+                    <span class="btn btn-primary">
+                        Get Yesify Desktop
+                        <svg class="icon"><use href="#i-arrow"/></svg>
+                    </span>
+                </div>
+            </a>
+
+            <div class="apps">
+
+                <a class="panel app-card reveal" style="--i:7" href="/yesify">
+                    <div class="app-banner"><img src="/assets/Yesify-Ext-Banner.png" alt="" loading="lazy"></div>
+                    <div class="app-body">
+                        <div class="app-icon inset"><img src="/assets/Yesify.png" alt=""></div>
                         <h3>Yesify</h3>
                         <p>Spotify ad blocker &amp; unlocked, resizable mini player.</p>
-                        <span class="chip">Browser extension</span>
+                        <div class="app-foot">
+                            <span class="chip">Browser extension</span>
+                            <span class="app-cta">Open <svg class="icon"><use href="#i-arrow"/></svg></span>
+                        </div>
                     </div>
                 </a>
 
-                <a class="panel product-card reveal" style="--i:7" href="/yex">
-                    <div class="product-card-top">
-                        <div class="product-card-icon"><img src="/assets/Yex.png" alt=""></div>
-                        <svg class="icon product-card-arrow"><use href="#i-arrow"/></svg>
-                    </div>
-                    <div class="product-card-body">
+                <a class="panel app-card reveal" style="--i:8" href="/yex">
+                    <div class="app-banner"><img src="/assets/Yex-Banner.png" alt="" loading="lazy"></div>
+                    <div class="app-body">
+                        <div class="app-icon inset"><img src="/assets/Yex.png" alt=""></div>
                         <h3>Yex Executor</h3>
                         <p>Free Roblox executor. Download the latest version.</p>
-                        <span class="chip">Windows app</span>
+                        <div class="app-foot">
+                            <span class="chip">Windows app</span>
+                            <span class="app-cta">Open <svg class="icon"><use href="#i-arrow"/></svg></span>
+                        </div>
                     </div>
                 </a>
 
-                <a class="panel product-card reveal" style="--i:8" href="/YesClient/">
-                    <div class="product-card-top">
-                        <div class="product-card-icon"><img src="/YesClient/assets/YesClient.png" alt=""></div>
-                        <svg class="icon product-card-arrow"><use href="#i-arrow"/></svg>
-                    </div>
-                    <div class="product-card-body">
+                <a class="panel app-card reveal" style="--i:9" href="/YesClient/">
+                    <div class="app-banner"><img src="/assets/YesClient-Banner.png" alt="" loading="lazy"></div>
+                    <div class="app-body">
+                        <div class="app-icon"><img src="/assets/YesClient.png" alt=""></div>
                         <h3>YesClient</h3>
                         <p>Clean Minecraft housing client for Forge 1.8.9.</p>
-                        <span class="chip">Minecraft mod</span>
+                        <div class="app-foot">
+                            <span class="chip">Minecraft mod</span>
+                            <span class="app-cta">Open <svg class="icon"><use href="#i-arrow"/></svg></span>
+                        </div>
                     </div>
                 </a>
 
-                <a class="panel product-card reveal" style="--i:9" href="/Based/">
-                    <div class="product-card-top">
-                        <div class="product-card-icon"><img src="/Based/assets/BasedIcon.png" alt=""></div>
-                        <svg class="icon product-card-arrow"><use href="#i-arrow"/></svg>
+                <!-- Based Client: unavailable, intentionally not a link -->
+                <div class="panel app-card is-off reveal" style="--i:10" aria-disabled="true">
+                    <div class="app-banner">
+                        <img src="/assets/Based-Banner.png" alt="" loading="lazy">
                     </div>
-                    <div class="product-card-body">
+                    <div class="app-body">
+                        <div class="app-icon"><img src="/assets/Based.png" alt=""></div>
                         <h3>Based Client</h3>
                         <p>Open, un-obfuscated Fabric utility client for 1.21.11. 135 modules.</p>
-                        <span class="chip">Minecraft mod</span>
+                        <div class="app-foot">
+                            <span class="chip">Minecraft mod</span>
+                            <span class="app-cta"><svg class="icon"><use href="#i-lock"/></svg> Unavailable</span>
+                        </div>
                     </div>
-                </a>
+                </div>
 
             </div>
         </section>
@@ -743,7 +1147,8 @@
         <section class="home-section" id="community">
             <div class="section-head">
                 <div>
-                    <h2>Community</h2>
+                    <div class="eyebrow">Community</div>
+                    <h2>Hang out &amp; get help</h2>
                     <p>Get help, find scripts and follow development.</p>
                 </div>
             </div>
@@ -751,39 +1156,46 @@
             <div class="community">
 
                 <a class="panel community-card discord" href="https://discord.gg/P2DFbPX3Qh" target="_blank" rel="noopener noreferrer">
-                    <div class="community-icon"><svg class="icon icon-fill"><use href="#i-discord"/></svg></div>
+                    <div class="community-top">
+                        <div class="community-icon"><svg class="icon icon-fill"><use href="#i-discord"/></svg></div>
+                        <svg class="icon card-arrow"><use href="#i-arrow"/></svg>
+                    </div>
                     <div>
                         <div class="community-title">Discord</div>
                         <div class="community-subtitle">Official YesHub community</div>
                     </div>
-                    <svg class="icon product-card-arrow"><use href="#i-arrow"/></svg>
                 </a>
 
                 <a class="panel community-card scriptblox" href="https://scriptblox.com/u/YesDev" target="_blank" rel="noopener noreferrer">
-                    <div class="community-icon"><img src="/assets/ScriptBlox.png" alt=""></div>
+                    <div class="community-top">
+                        <div class="community-icon"><img src="/assets/ScriptBlox.png" alt=""></div>
+                        <svg class="icon card-arrow"><use href="#i-arrow"/></svg>
+                    </div>
                     <div>
                         <div class="community-title">ScriptBlox</div>
                         <div class="community-subtitle">Scripts &amp; projects by yes.dev</div>
                     </div>
-                    <svg class="icon product-card-arrow"><use href="#i-arrow"/></svg>
                 </a>
 
                 <a class="panel community-card" href="https://github.com/yesd3v" target="_blank" rel="noopener noreferrer">
-                    <div class="community-icon"><svg class="icon icon-fill"><use href="#i-github"/></svg></div>
+                    <div class="community-top">
+                        <div class="community-icon"><svg class="icon icon-fill"><use href="#i-github"/></svg></div>
+                        <svg class="icon card-arrow"><use href="#i-arrow"/></svg>
+                    </div>
                     <div>
                         <div class="community-title">GitHub</div>
-                        <div class="community-subtitle">YesD3v &mdash; source &amp; repos</div>
+                        <div class="community-subtitle">Source code &amp; repos by YesD3v</div>
                     </div>
-                    <svg class="icon product-card-arrow"><use href="#i-arrow"/></svg>
                 </a>
 
             </div>
         </section>
 
         <!-- ScriptBlox Scripts -->
-        <section class="home-section" id="scripts" style="margin-bottom:72px">
+        <section class="home-section" id="scripts" style="margin-bottom:80px">
             <div class="section-head">
                 <div>
+                    <div class="eyebrow">Scripts</div>
                     <h2>Latest scripts</h2>
                     <p>Fresh from ScriptBlox.</p>
                 </div>
@@ -800,7 +1212,7 @@
 
     <footer class="footer">
         <div class="wrap">
-            <span>&copy; <span id="year">2026</span> yes.dev</span>
+            <span class="footer-brand"><img src="/assets/YesHub.png" alt="">&copy; <span id="year">2026</span> yes.dev</span>
             <nav class="footer-links">
                 <a href="https://discord.gg/P2DFbPX3Qh" target="_blank" rel="noopener noreferrer">Discord</a>
                 <a href="https://scriptblox.com/u/YesDev" target="_blank" rel="noopener noreferrer">ScriptBlox</a>
@@ -812,7 +1224,7 @@
     <script src="/assets/site.js"></script>
     <script>
         // ── Card spotlight follows the cursor ───────────────────────
-        document.querySelectorAll(".product-card").forEach(function (card) {
+        document.querySelectorAll("a.app-card").forEach(function (card) {
             card.addEventListener("pointermove", function (e) {
                 var r = card.getBoundingClientRect();
                 card.style.setProperty("--mx", (e.clientX - r.left) + "px");
