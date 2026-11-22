@@ -11,24 +11,22 @@
     <link rel="shortcut icon" type="image/png" href="/assets/Yesify-Desktop-Icon.png">
     <link rel="apple-touch-icon" href="/assets/Yesify-Desktop-Icon.png">
 
-    <!-- Link previews: the banner is for Discord only. Discord reads twitter:image (listed first here);
-         Snapchat, iMessage, WhatsApp and the rest read og:image, which is the logo PNG. -->
+    <!-- Link previews. Discord: the banner, from oembed.json (Discord only uses an oEmbed thumbnail when the
+         page has no og:image / twitter:image, and other apps don't read oEmbed). Everyone else: the logo PNG,
+         from image_src / itemprop image and the icons above. -->
+    <link rel="alternate" type="application/json+oembed" href="https://yesd3v.github.io/yesify-desktop/oembed.json" title="Yesify Desktop">
+    <link rel="image_src" href="https://yesd3v.github.io/assets/Yesify-Desktop-Icon.png">
+    <meta itemprop="image"           content="https://yesd3v.github.io/assets/Yesify-Desktop-Icon.png">
+
     <meta name="twitter:card"        content="summary_large_image">
     <meta name="twitter:title"       content="Yesify Desktop - Free Native Music Player for Windows">
     <meta name="twitter:description" content="Download Yesify Desktop by yes.dev. All of YouTube Music and your Spotify playlists. No account, no ads, unlimited skips.">
-    <meta name="twitter:image"       content="https://yesd3v.github.io/assets/Yesify-Banner.png">
-    <meta name="twitter:image:alt"   content="Yesify">
 
     <meta property="og:type"        content="website">
     <meta property="og:url"         content="https://yesd3v.github.io/yesify-desktop">
     <meta property="og:site_name"   content="Yesify Desktop">
     <meta property="og:title"       content="Yesify Desktop - Free Native Music Player for Windows">
     <meta property="og:description" content="Download Yesify Desktop by yes.dev&#10;All of YouTube Music and your Spotify playlists, in a native glass player. No account, no Premium, no ads, unlimited skips.">
-    <meta property="og:image"       content="https://yesd3v.github.io/assets/Yesify-Desktop-Icon.png">
-    <meta property="og:image:type"  content="image/png">
-    <meta property="og:image:width"  content="256">
-    <meta property="og:image:height" content="256">
-    <meta property="og:image:alt"   content="Yesify">
 
     <meta name="description" content="Download Yesify Desktop by yes.dev: a free, open-source, native Windows music player. Browse all of YouTube Music, play your Spotify playlists, synced lyrics. No account, no Premium, no ads, unlimited skips.">
 
