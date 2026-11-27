@@ -60,18 +60,21 @@
     if (el) el.textContent = new Date().getFullYear();
 })();
 
-// Download counter: sums GitHub release asset downloads matching `match`
-// and reveals the #dlChip element once the number is known.
+// Download counter: sums GitHub release asset downloads matching `match` (from one releases API URL,
+// or several) and reveals the #dlChip element once the number is known.
 async function loadDownloadCount(apiUrl, match) {
     var chip  = document.getElementById("dlChip");
     var count = document.getElementById("dlCount");
     if (!chip || !count) return;
 
     try {
-        const res = await fetch(apiUrl, { headers: { Accept: "application/vnd.github+json" } });
-        if (!res.ok) throw new Error();
-        const data = await res.json();
-        const releases = Array.isArray(data) ? data : [data];
+        const urls = Array.isArray(apiUrl) ? apiUrl : [apiUrl];
+        const pages = await Promise.all(urls.map(async function (url) {
+            const res = await fetch(url, { headers: { Accept: "application/vnd.github+json" } });
+            if (!res.ok) throw new Error();
+            return res.json();
+        }));
+        const releases = pages.flatMap(function (data) { return Array.isArray(data) ? data : [data]; });
 
         let total = 0;
         for (const rel of releases) {
